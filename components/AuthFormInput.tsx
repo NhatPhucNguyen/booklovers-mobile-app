@@ -5,15 +5,16 @@ import {
     TextInputProps,
     StyleSheet,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faUser, faKeyboard } from "@fortawesome/free-regular-svg-icons";
+import { faLock } from "@fortawesome/free-solid-svg-icons";
 type AuthFormInputProps = {
     icon?: "person" | "lock";
 } & TextInputProps;
 const AuthFormInput = (props: AuthFormInputProps) => {
     return (
-        <View style={styles.inputContainer}>
+        <View style={styles.inputContainer} accessibilityLabel="controller">
             {!props.icon && (
                 <FontAwesomeIcon icon={faKeyboard} color="#009dff" size={24} />
             )}
@@ -21,9 +22,13 @@ const AuthFormInput = (props: AuthFormInputProps) => {
                 <FontAwesomeIcon icon={faUser} color="#009dff" size={24} />
             )}
             {props.icon == "lock" && (
-                <FontAwesomeIcon icon={faUser} color="#009dff" size={24} />
+                <FontAwesomeIcon icon={faLock} color="#009dff" size={24} />
             )}
-            <TextInput {...props} style={styles.input} />
+            <TextInput
+                {...props}
+                style={styles.input}
+                accessibilityLabel={props.accessibilityLabel || "textInput"}
+            />
         </View>
     );
 };

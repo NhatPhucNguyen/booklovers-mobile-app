@@ -14,16 +14,18 @@ const Login = () => {
                 Discover your favorite books with us!
             </Text>
             <View style={styles.formContainer}>
-                <FormController label="Username">
+                <FormController label="Email">
                     <AuthFormInput
-                        placeholder="Enter your username/email"
+                        placeholder="Enter your email"
                         icon="person"
+                        accessibilityLabel="email"
                     />
                 </FormController>
                 <FormController label="Password">
                     <AuthFormInput
-                        placeholder="Enter your username/email"
+                        placeholder="Enter your password"
                         icon="person"
+                        accessibilityLabel="password"
                     />
                 </FormController>
                 <View style={styles.subContainer}>
@@ -32,12 +34,13 @@ const Login = () => {
                             value={isChecked}
                             onValueChange={setChecked}
                             color={isChecked ? Colors.light.primary : undefined}
+                            accessibilityLabel="checkbox"
                         />
                         <Text>Remember me</Text>
                     </View>
                     <Text>Forgot password?</Text>
                 </View>
-                <Button title="Login" style={styles.loginButton} />
+                <Button title="Login" style={styles.loginButton} accessibilityRole="button"/>
                 <NavigationLink href={"/register"} style={styles.link}>
                     Create account
                 </NavigationLink>

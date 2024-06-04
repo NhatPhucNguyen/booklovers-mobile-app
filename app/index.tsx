@@ -20,16 +20,18 @@ export default function Index() {
         return null;
     }
     return (
-        <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
+        <SafeAreaView style={styles.container} onLayout={onLayoutRootView} accessibilityLabel="container">
             <ImageBackground
                 source={require("../assets/images/main-background.png")}
                 resizeMode="cover"
                 style={styles.image}
+                accessibilityLabel="backgroundImage"
             >
                 <View style={styles.logoContainer}>
                     <Image
                         source={require("../assets/images/transparent-logo.png")}
                         style={styles.logo}
+                        accessibilityLabel="logo"
                     />
                     <View style={styles.subContainer}>
                         <Text style={styles.text}>
@@ -42,6 +44,7 @@ export default function Index() {
                                 onPress={() => {
                                     router.push("/login");
                                 }}
+                                accessibilityRole="button"
                             />
                         </View>
                     </View>
