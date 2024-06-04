@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+SplashScreen.preventAutoHideAsync();
 export default function Index() {
     const [fontsLoaded, fontError] = useFonts({
         "Literata-Regular": require("../assets/fonts/Literata-Regular.ttf"),
