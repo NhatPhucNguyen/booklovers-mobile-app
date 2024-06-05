@@ -3,10 +3,34 @@ import Button from "@/components/Button";
 import FormController from "@/components/FormController";
 import NavigationLink from "@/components/NavigationLink";
 import { Colors } from "@/constants/Colors";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Checkbox from "expo-checkbox";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { StyleSheet, Text, View } from "react-native";
+import { z } from "zod";
+const loginSchema = z.object({
+    email: z.string({ message: "Please enter your email" }).email({
+        message: "Please enter a valid email address",
+    }),
+    password: z
+        .string({
+            required_error: "Please enter your password",
+        })
+        .min(1, {
+            message: "Please enter your password",
+        }),
+});
+type LoginForm = z.infer<typeof loginSchema>;
 const Login = () => {
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<LoginForm>({
+        resolver: zodResolver(loginSchema),
+    });
+    const onSubmit = (data: LoginForm) => console.log(data);
     const [isChecked, setChecked] = useState(false);
     return (
         <View style={styles.container}>
@@ -19,6 +43,9 @@ const Login = () => {
                         placeholder="Enter your email"
                         icon="person"
                         accessibilityLabel="email"
+                        control={control}
+                        name={"email"}
+                        error={errors.email}
                     />
                 </FormController>
                 <FormController label="Password">
@@ -26,6 +53,9 @@ const Login = () => {
                         placeholder="Enter your password"
                         icon="person"
                         accessibilityLabel="password"
+                        control={control}
+                        name={"password"}
+                        error={errors.password}
                     />
                 </FormController>
                 <View style={styles.subContainer}>
@@ -40,7 +70,12 @@ const Login = () => {
                     </View>
                     <Text>Forgot password?</Text>
                 </View>
-                <Button title="Login" style={styles.loginButton} accessibilityRole="button"/>
+                <Button
+                    title="Login"
+                    style={styles.loginButton}
+                    accessibilityRole="button"
+                    onPress={handleSubmit(onSubmit)}
+                />
                 <NavigationLink href={"/register"} style={styles.link}>
                     Create account
                 </NavigationLink>
