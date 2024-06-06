@@ -6,7 +6,7 @@ import { Colors } from "@/constants/Colors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { z } from "zod";
 const PASSWORD_REGEX = new RegExp(
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
@@ -46,7 +46,7 @@ const Register = () => {
     });
     const onSubmit = (data: RegisterForm) => console.log(data);
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <Text style={styles.text}>Let's start here</Text>
             <View style={styles.formContainer}>
                 <FormController label="Name">
@@ -101,7 +101,7 @@ const Register = () => {
                     Already have an account?
                 </NavigationLink>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 const styles = StyleSheet.create({
@@ -110,11 +110,13 @@ const styles = StyleSheet.create({
         fontFamily: "Literata-Regular",
     },
     container: {
-        marginTop: "30%",
         maxWidth: "90%",
+        overflow: "visible",
+        marginTop: "20%",
     },
     formContainer: {
-        marginTop: 20,
+        paddingTop: 20,
+        paddingBottom: 20,
     },
     subContainer: {
         justifyContent: "space-between",

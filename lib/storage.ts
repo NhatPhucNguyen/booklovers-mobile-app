@@ -4,8 +4,7 @@ export const storeData = async (key: string, value: string) => {
     try {
         await AsyncStorage.setItem(key, value);
     } catch (error) {
-        console.log(error);
-        return { error: "Fail to store data" };
+        throw new Error("Fail to store data");
     }
 };
 
@@ -14,7 +13,14 @@ export const getData = async (key: string) => {
         const value = await AsyncStorage.getItem(key);
         return value;
     } catch (error) {
-        console.log(error);
-        return null;
+        throw new Error("Fail to get data");
+    }
+};
+
+export const removeData = async (key: string) => {
+    try {
+        await AsyncStorage.removeItem(key);
+    } catch (error) {
+        throw new Error("Fail to remove data");
     }
 };

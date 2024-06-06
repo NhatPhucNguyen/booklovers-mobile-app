@@ -1,9 +1,9 @@
-import { fireEvent, render, userEvent } from "@testing-library/react-native";
+import { cleanup, fireEvent, render, userEvent } from "@testing-library/react-native";
 import Login from "../login";
-jest.mock("@fortawesome/react-native-fontawesome", () => ({
-    FontAwesomeIcon: "",
-}));
 describe("Login component", () => {
+    const user = userEvent.setup({
+        delay: 500,
+    });
     it("should render the login form with the correct accessibility label", () => {
         const { getByLabelText, getByText, getByRole } = render(<Login />);
 
@@ -36,7 +36,6 @@ describe("Login component", () => {
         expect(passwordInput.props.value).toBe(password);
     });
     it("should render the error message when the input is invalid", async () => {
-        const user = userEvent.setup();
         const { getByLabelText, getByRole, getAllByLabelText } = render(
             <Login />
         );
