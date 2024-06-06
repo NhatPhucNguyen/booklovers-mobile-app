@@ -20,9 +20,15 @@ describe("Auth API", () => {
         });
     });
     describe("register", () => {
+        const registerData = {
+            name: "name",
+            email: "email",
+            password: "password",
+            confirmPassword: "password",
+        }
         test("should return success", async () => {
             axiosMock.onPost("/users/register").reply(201);
-            const { success } = await register("name", "email", "password");
+            const { success } = await register(registerData);
             expect(success).toBeTruthy();
         });
         test("should return error message", async () => {
@@ -30,7 +36,7 @@ describe("Auth API", () => {
             axiosMock.onPost("/users/register").reply(400, {
                 message: errorMessage,
             });
-            const { error } = await register("name", "email", "password");
+            const { error } = await register(registerData);
             expect(error).toEqual(errorMessage);
         });
     });

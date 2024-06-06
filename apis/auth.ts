@@ -17,18 +17,15 @@ export const login = async (
         return handleError(error);
     }
 };
-
-export const register = async (
-    name: string,
-    email: string,
-    password: string
-): Promise<{ success?: boolean; error?: string }> => {
+type RegisterInput = {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+};
+export const register = async (registerInput: RegisterInput): Promise<{ success?: boolean; error?: string }> => {
     try {
-        await axiosInstance.post("/users/register", {
-            name,
-            email,
-            password,
-        });
+        await axiosInstance.post("/users/register", registerInput);
         return { success: true };
     } catch (error) {
         return handleError(error);

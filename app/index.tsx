@@ -2,6 +2,7 @@ import Button from "@/components/Button";
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 import { useCallback } from "react";
 import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,7 +21,12 @@ export default function Index() {
         return null;
     }
     return (
-        <SafeAreaView style={styles.container} onLayout={onLayoutRootView} accessibilityLabel="container">
+        <SafeAreaView
+            style={styles.container}
+            onLayout={onLayoutRootView}
+            accessibilityLabel="container"
+        >
+            <StatusBar style="dark"/>
             <ImageBackground
                 source={require("../assets/images/main-background.png")}
                 resizeMode="cover"

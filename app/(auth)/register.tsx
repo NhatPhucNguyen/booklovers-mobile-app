@@ -8,6 +8,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { z } from "zod";
+import Toast from "react-native-toast-message";
+import { register } from "@/apis/auth";
+import { router } from "expo-router";
 const PASSWORD_REGEX = new RegExp(
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
 );
@@ -44,7 +47,23 @@ const Register = () => {
     } = useForm<RegisterForm>({
         resolver: zodResolver(registerSchema),
     });
-    const onSubmit = (data: RegisterForm) => console.log(data);
+    const onSubmit = async (data: RegisterForm) => {
+        const { error } = await register(data);
+        if (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error,
+            });
+            return;
+        }
+        Toast.show({
+            type: "success",
+            text1: "Success",
+            text2: "You have successfully registered!",
+        });
+        router.navigate("interestSelection");
+    };
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.text}>Let's start here</Text>

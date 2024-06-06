@@ -55,6 +55,7 @@ const AuthFormInput = <Type extends FieldValues>(
                                     accessibilityLabel={
                                         props.accessibilityLabel || "textInput"
                                     }
+                                    placeholderTextColor={"#bdbdbd"}
                                 />
                             );
                         }}
@@ -67,6 +68,7 @@ const AuthFormInput = <Type extends FieldValues>(
                         accessibilityLabel={
                             props.accessibilityLabel || "textInput"
                         }
+                        placeholderTextColor={"#585858"}
                     />
                 )}
             </View>
