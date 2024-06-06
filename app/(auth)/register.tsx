@@ -57,11 +57,6 @@ const Register = () => {
             });
             return;
         }
-        Toast.show({
-            type: "success",
-            text1: "Success",
-            text2: "You have successfully registered!",
-        });
         router.navigate("interestSelection");
     };
     return (

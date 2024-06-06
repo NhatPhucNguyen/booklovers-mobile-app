@@ -1,13 +1,17 @@
+import { login } from "@/apis/auth";
 import AuthFormInput from "@/components/AuthFormInput";
 import Button from "@/components/Button";
 import FormController from "@/components/FormController";
 import NavigationLink from "@/components/NavigationLink";
 import { Colors } from "@/constants/Colors";
+import { getData, storeData } from "@/lib/storage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Checkbox from "expo-checkbox";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { StyleSheet, Text, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { z } from "zod";
 const loginSchema = z.object({
     email: z.string({ message: "Please enter your email" }).email({
@@ -30,7 +34,19 @@ const Login = () => {
     } = useForm<LoginForm>({
         resolver: zodResolver(loginSchema),
     });
-    const onSubmit = (data: LoginForm) => console.log(data);
+    const onSubmit = async (data: LoginForm) => {
+        const { accessToken, error } = await login(data.email, data.password);
+        if (error) {
+            Toast.show({ type: "error", text1: "Error", text2: error });
+            return;
+        }
+        if (accessToken) {
+            await storeData("token", accessToken);
+            router.navigate("interestSelection");
+            return;
+        }
+        Toast.show({ type: "error", text1: "Error", text2: "Fail to login" });
+    };
     const [isChecked, setChecked] = useState(false);
     return (
         <View style={styles.container}>
@@ -51,7 +67,8 @@ const Login = () => {
                 <FormController label="Password">
                     <AuthFormInput
                         placeholder="Enter your password"
-                        icon="person"
+                        icon="lock"
+                        secureTextEntry={true}
                         accessibilityLabel="password"
                         control={control}
                         name={"password"}
