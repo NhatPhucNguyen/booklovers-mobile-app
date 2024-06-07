@@ -57,7 +57,7 @@ const Register = () => {
             });
             return;
         }
-        router.navigate("interestSelection");
+        router.replace("/interestSelection");
     };
     return (
         <ScrollView style={styles.container}>

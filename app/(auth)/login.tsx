@@ -4,6 +4,7 @@ import Button from "@/components/Button";
 import FormController from "@/components/FormController";
 import NavigationLink from "@/components/NavigationLink";
 import { Colors } from "@/constants/Colors";
+import useAuthContext from "@/hooks/useAuthContext";
 import { getData, storeData } from "@/lib/storage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Checkbox from "expo-checkbox";
@@ -34,6 +35,7 @@ const Login = () => {
     } = useForm<LoginForm>({
         resolver: zodResolver(loginSchema),
     });
+    const {setAuth} = useAuthContext();
     const onSubmit = async (data: LoginForm) => {
         const { accessToken, error } = await login(data.email, data.password);
         if (error) {
@@ -42,7 +44,8 @@ const Login = () => {
         }
         if (accessToken) {
             await storeData("token", accessToken);
-            router.navigate("interestSelection");
+            setAuth(true);
+            router.replace("/home");
             return;
         }
         Toast.show({ type: "error", text1: "Error", text2: "Fail to login" });

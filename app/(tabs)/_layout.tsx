@@ -6,11 +6,12 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-const AuthLayout = () => {
+const TabsLayout = () => {
     const { isAuthenticated } = useAuthContext();
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
         return <Redirect href="/home" />;
     }
+
     return (
         <>
             <StatusBar style="dark" />
@@ -30,4 +31,4 @@ const styles = StyleSheet.create({
         paddingRight: 20,
     },
 });
-export default AuthLayout;
+export default TabsLayout;

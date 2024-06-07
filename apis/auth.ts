@@ -23,7 +23,9 @@ type RegisterInput = {
     password: string;
     confirmPassword: string;
 };
-export const register = async (registerInput: RegisterInput): Promise<{ success?: boolean; error?: string }> => {
+export const register = async (
+    registerInput: RegisterInput
+): Promise<{ success?: boolean; error?: string }> => {
     try {
         await axiosInstance.post("/users/register", registerInput);
         return { success: true };
@@ -37,8 +39,20 @@ export const logout = async (): Promise<{
     error?: string;
 }> => {
     try {
-        await axiosInstance.post("/users/logout");
+        await axiosInstance.delete("/users/logout");
         await removeData("token");
+        return { success: true };
+    } catch (error) {
+        return handleError(error);
+    }
+};
+
+export const verifyToken = async (): Promise<{
+    success?: boolean;
+    error?: string;
+}> => {
+    try {
+        await axiosInstance.get("/users");
         return { success: true };
     } catch (error) {
         return handleError(error);

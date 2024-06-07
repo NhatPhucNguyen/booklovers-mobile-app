@@ -1,11 +1,16 @@
-import { cleanup, fireEvent, render, userEvent } from "@testing-library/react-native";
+import { fireEvent, render, userEvent } from "@testing-library/react-native";
+import AuthContextProvider from "../../../context/AuthContext";
 import Login from "../login";
 describe("Login component", () => {
     const user = userEvent.setup({
         delay: 500,
     });
     it("should render the login form with the correct accessibility label", () => {
-        const { getByLabelText, getByText, getByRole } = render(<Login />);
+        const { getByLabelText, getByText, getByRole } = render(
+            <AuthContextProvider>
+                <Login />
+            </AuthContextProvider>
+        );
 
         const emailInput = getByLabelText("email");
         const passwordInput = getByLabelText("password");
@@ -25,7 +30,11 @@ describe("Login component", () => {
     it("should change the input value when typing", () => {
         const email = "email@gmail.com";
         const password = "password";
-        const { getByLabelText } = render(<Login />);
+        const { getByLabelText } = render(
+            <AuthContextProvider>
+                <Login />
+            </AuthContextProvider>
+        );
         const emailInput = getByLabelText("email");
         const passwordInput = getByLabelText("password");
 
@@ -37,7 +46,9 @@ describe("Login component", () => {
     });
     it("should render the error message when the input is invalid", async () => {
         const { getByLabelText, getByRole, getAllByLabelText } = render(
-            <Login />
+            <AuthContextProvider>
+                <Login />
+            </AuthContextProvider>
         );
         const emailInput = getByLabelText("email");
         const passwordInput = getByLabelText("password");
