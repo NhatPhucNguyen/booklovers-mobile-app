@@ -5,6 +5,7 @@ jest.mock("@react-native-async-storage/async-storage", () =>
 jest.mock("@fortawesome/react-native-fontawesome", () => ({
     FontAwesomeIcon: "",
 }));
+process.env.EXPO_PUBLIC_GG_API_KEY = "test-key";
 afterEach(() => {
     cleanup();
 });
