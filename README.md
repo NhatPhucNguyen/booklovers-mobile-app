@@ -1,50 +1,34 @@
-# Welcome to your Expo app 👋
+# Book Lovers
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+"Book Lovers" is a mobile application designed for book enthusiasts. It provides a platform for users to explore, review, and share their favorite books. With a user-friendly interface, the app allows users to browse through a vast collection of books, read detailed descriptions, and check out reviews from other users. Users can also create their own book lists, share their thoughts on books they've read, and interact with other book lovers. The app is built using React Native and TypeScript, ensuring a smooth and responsive user experience across different mobile platforms. It also leverages APIs for fetching book data, providing users with up-to-date and comprehensive information about their favorite books. Whether you're a casual reader or a dedicated bookworm, "Book Lovers" offers a unique and engaging platform to fuel your love for books.
 
-## Get started
+## Main Features
+Some features are still in the development:
 
-1. Install dependencies
+- User Authentication
+- Book Browsing
+- User Reviews
+- User Interactions
+- Personal Book Lists
 
-   ```bash
-   npm install
-   ```
+## Installation
 
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+To install and run the "Book Lovers" project, follow these steps:
+1. Clone the repository:
 ```bash
-npm run reset-project
+git clone https://github.com/NhatPhucNguyen/booklovers-mobile-app.git
+```
+2. Navigate to the project directory:
+```bash
+cd booklovers-mobile-app
+```
+3. Install the project dependencies:
+```bash
+npm install
+```
+4. Start the project:
+```bash
+npm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Once you run npm start, the Expo CLI will start in your terminal, and you can open the app in an emulator or on a physical device.
