@@ -1,5 +1,6 @@
-import { getBooksBySubject } from "@/apis/book";
+import { getBooksBySubject, getNewestBooks } from "@/apis/book";
 import BookItem from "@/components/BookItem";
+import BriefPostCard from "@/components/BriefPostCard";
 import { Colors } from "@/constants/Colors";
 import {
     faComment,
@@ -7,7 +8,13 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View
+} from "react-native";
 import { useQuery } from "react-query";
 type Book = {
     title: string;
@@ -16,14 +23,13 @@ type Book = {
         smallThumbnail: string;
     };
 };
-const subject = "adventure";
 const Home = () => {
     const { data: books } = useQuery({
-        queryFn: () => getBooksBySubject(subject),
-        queryKey: [subject],
+        queryFn: getNewestBooks,
+        queryKey: ["newestBooks"],
     });
     return (
-        <View>
+        <ScrollView>
             <View style={styles.header} accessibilityLabel="header">
                 <FontAwesomeIcon
                     icon={faRectangleList}
@@ -40,31 +46,50 @@ const Home = () => {
                     color={Colors.light.primary}
                 />
             </View>
-            <View style={styles.groupContainer}>
-                <ScrollView horizontal={true} accessibilityLabel="group-container">
-                    <GroupItem />
-                    <GroupItem />
-                    <GroupItem />
-                    <GroupItem />
-                    <GroupItem />
-                    <GroupItem />
+            
+                <View style={styles.groupContainer}>
+                    <ScrollView
+                        horizontal={true}
+                        accessibilityLabel="group-container"
+                    >
+                        <GroupItem />
+                        <GroupItem />
+                        <GroupItem />
+                        <GroupItem />
+                        <GroupItem />
+                        <GroupItem />
+                    </ScrollView>
+                </View>
+                <Text style={styles.sectionHeader}>New books</Text>
+                <View style={styles.bookList}>
+                    <ScrollView
+                        horizontal={true}
+                        accessibilityLabel="book-list"
+                    >
+                        {books?.map((book: Book, index) => {
+                            return (
+                                <BookItem
+                                    key={index}
+                                    title={book.title}
+                                    imageLinks={book.imageLinks}
+                                />
+                            );
+                        })}
+                    </ScrollView>
+                </View>
+                <Text style={styles.sectionHeader}>Discussions</Text>
+                <ScrollView>
+                    <View
+                        style={styles.discussions}
+                        accessibilityLabel="discussions"
+                    >
+                        <BriefPostCard />
+                        <BriefPostCard />
+                        <BriefPostCard />
+                        <BriefPostCard />
+                    </View>
                 </ScrollView>
-            </View>
-            <Text style={styles.sectionHeader}>New reviewed books</Text>
-            <View style={styles.bookList}>
-                <ScrollView horizontal={true} accessibilityLabel="book-list">
-                    {books?.map((book: Book, index) => {
-                        return (
-                            <BookItem
-                                key={index}
-                                title={book.title}
-                                imageLinks={book.imageLinks}
-                            />
-                        );
-                    })}
-                </ScrollView>
-            </View>
-            {/* <Button
+                {/* <Button
                 title="Logout"
                 onPress={async () => {
                     await logout();
@@ -73,7 +98,8 @@ const Home = () => {
                     router.replace("/login");
                 }}
             /> */}
-        </View>
+            
+        </ScrollView>
     );
 };
 function GroupItem() {
@@ -131,6 +157,10 @@ const styles = StyleSheet.create({
     bookList: {
         marginTop: 10,
         height: 210,
+    },
+    discussions: {
+        marginTop: 10,
+        paddingHorizontal: 10,
     },
 });
 export default Home;

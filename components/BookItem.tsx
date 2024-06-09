@@ -8,6 +8,7 @@ type BookItemProps = {
         smallThumbnail: string;
     };
 };
+const TITLE_MAX_LENGTH = 30;
 const BookItem = ({ title, imageLinks }: BookItemProps) => {
     return (
         <View style={styles.bookItem}>
@@ -15,7 +16,11 @@ const BookItem = ({ title, imageLinks }: BookItemProps) => {
                 source={{ uri: imageLinks.thumbnail }}
                 style={styles.bookImage}
             />
-            <Text style={styles.bookTitle}>{title}</Text>
+            <Text style={styles.bookTitle}>
+                {title.length > TITLE_MAX_LENGTH
+                    ? `${title.substring(0, TITLE_MAX_LENGTH - 3)}...`
+                    : title}
+            </Text>
         </View>
     );
 };

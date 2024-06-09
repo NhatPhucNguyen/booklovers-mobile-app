@@ -15,3 +15,17 @@ export const getBooksBySubject = async (subject: string): Promise<Book[]> => {
         throw new Error("Can not get books by subject");
     }
 };
+
+export const getNewestBooks = async (): Promise<Book[]> => {
+    try {
+        const response = await axios.get(
+            `${googleBookAPI}?q=%&orderBy=newest&key=${apiKey}`
+        );
+        const data = response.data.items as { volumeInfo: Book }[];
+        const books = data.map((item) => item.volumeInfo);
+        return books;
+    } catch (error) {
+        console.log(error);
+        throw new Error("Can not get newest books");
+    }
+};

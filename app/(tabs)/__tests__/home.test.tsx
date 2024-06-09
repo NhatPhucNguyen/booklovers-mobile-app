@@ -13,7 +13,7 @@ const bookData = [
 ];
 jest.mock("../../../apis/book", () => {
     return {
-        getBooksBySubject: jest.fn().mockResolvedValue(bookData),
+        getNewestBooks: jest.fn().mockResolvedValue(bookData),
     };
 });
 describe("Home Page", () => {
@@ -27,10 +27,12 @@ describe("Home Page", () => {
         const header = getByLabelText("header");
         const groupContainer = getByLabelText("group-container");
         const bookList = getByLabelText("book-list");
+        const discussions = getByLabelText("discussions");
         expect(header).toBeDefined();
         expect(groupContainer).toBeDefined();
         expect(bookList).toBeDefined();
-        expect(getByText("New reviewed books")).toBeDefined();
+        expect(discussions).toBeDefined();
+        expect(getByText("New books")).toBeDefined();
     });
     test("render books retrieved from api", () => {
         const { getByText } = render(
