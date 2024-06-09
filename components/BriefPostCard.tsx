@@ -4,8 +4,18 @@ import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+type GroupPostType = {
+    postType: "group";
+    groupName: string;
+    isJoined?: boolean;
+};
+type ReviewPostType = {
+    postType: "review";
+    bookTitle: string;
+};
+type BriefPostCardProps = GroupPostType | ReviewPostType;
 const ICON_SIZE = 18;
-const BriefPostCard = () => {
+const BriefPostCard = (props: BriefPostCardProps) => {
     const [isPressLike, setPressLike] = React.useState(false);
     const handlePressLike = () => {
         setPressLike(!isPressLike);
@@ -14,13 +24,27 @@ const BriefPostCard = () => {
         <View style={styles.container}>
             <View style={styles.section} accessibilityLabel="card-header">
                 <View style={styles.header}>
-                    <View >
-                        <Text style={styles.postType} accessibilityLabel="post-name">group/groupname</Text>
+                    <View>
+                        <Text
+                            style={styles.postType}
+                            accessibilityLabel="post-name"
+                        >
+                            {`${props.postType}/${
+                                props.postType === "group"
+                                    ? props.groupName
+                                    : props.bookTitle
+                            }`}
+                        </Text>
                     </View>
 
-                    <Pressable style={styles.joinButton} accessibilityLabel="join-button">
-                        <Text style={styles.joinText}>Join</Text>
-                    </Pressable>
+                    {props.postType == "group" && !props.isJoined && (
+                        <Pressable
+                            style={styles.joinButton}
+                            accessibilityLabel="join-button"
+                        >
+                            <Text style={styles.joinText}>Join</Text>
+                        </Pressable>
+                    )}
                 </View>
             </View>
             <View style={styles.section} accessibilityLabel="card-body">
@@ -38,8 +62,15 @@ const BriefPostCard = () => {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Voluptatem, nemo...see more
             </Text>
-            <View style={styles.interactionContainer} accessibilityLabel="card-footer">
-                <Pressable style={styles.iconWrapper} onPress={handlePressLike} accessibilityLabel="like-button">
+            <View
+                style={styles.interactionContainer}
+                accessibilityLabel="card-footer"
+            >
+                <Pressable
+                    style={styles.iconWrapper}
+                    onPress={handlePressLike}
+                    accessibilityLabel="like-button"
+                >
                     {isPressLike ? (
                         <FontAwesomeIcon
                             icon={faHeartSolid}
@@ -48,11 +79,18 @@ const BriefPostCard = () => {
                             testID="like-icon-pressed"
                         />
                     ) : (
-                        <FontAwesomeIcon icon={faHeart} size={ICON_SIZE} testID="like-icon"/>
+                        <FontAwesomeIcon
+                            icon={faHeart}
+                            size={ICON_SIZE}
+                            testID="like-icon"
+                        />
                     )}
                     <Text style={styles.iconText}>12</Text>
                 </Pressable>
-                <Pressable style={styles.iconWrapper} accessibilityLabel="comment-button">
+                <Pressable
+                    style={styles.iconWrapper}
+                    accessibilityLabel="comment-button"
+                >
                     <FontAwesomeIcon icon={faComments} size={ICON_SIZE} />
                     <Text style={styles.iconText}>12</Text>
                 </Pressable>

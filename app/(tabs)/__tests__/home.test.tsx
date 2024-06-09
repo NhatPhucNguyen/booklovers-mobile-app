@@ -27,11 +27,11 @@ describe("Home Page", () => {
         const header = getByLabelText("header");
         const groupContainer = getByLabelText("group-container");
         const bookList = getByLabelText("book-list");
-        const discussions = getByLabelText("discussions");
+        const postsContainer = getByLabelText("posts-container");
         expect(header).toBeDefined();
         expect(groupContainer).toBeDefined();
         expect(bookList).toBeDefined();
-        expect(discussions).toBeDefined();
+        expect(postsContainer).toBeDefined();
         expect(getByText("New books")).toBeDefined();
     });
     test("render books retrieved from api", () => {

@@ -8,13 +8,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";
-import {
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View
-} from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useQuery } from "react-query";
 type Book = {
     title: string;
@@ -46,50 +40,44 @@ const Home = () => {
                     color={Colors.light.primary}
                 />
             </View>
-            
-                <View style={styles.groupContainer}>
-                    <ScrollView
-                        horizontal={true}
-                        accessibilityLabel="group-container"
-                    >
-                        <GroupItem />
-                        <GroupItem />
-                        <GroupItem />
-                        <GroupItem />
-                        <GroupItem />
-                        <GroupItem />
-                    </ScrollView>
-                </View>
-                <Text style={styles.sectionHeader}>New books</Text>
-                <View style={styles.bookList}>
-                    <ScrollView
-                        horizontal={true}
-                        accessibilityLabel="book-list"
-                    >
-                        {books?.map((book: Book, index) => {
-                            return (
-                                <BookItem
-                                    key={index}
-                                    title={book.title}
-                                    imageLinks={book.imageLinks}
-                                />
-                            );
-                        })}
-                    </ScrollView>
-                </View>
-                <Text style={styles.sectionHeader}>Discussions</Text>
-                <ScrollView>
-                    <View
-                        style={styles.discussions}
-                        accessibilityLabel="discussions"
-                    >
-                        <BriefPostCard />
-                        <BriefPostCard />
-                        <BriefPostCard />
-                        <BriefPostCard />
-                    </View>
+
+            <View style={styles.groupContainer}>
+                <ScrollView
+                    horizontal={true}
+                    accessibilityLabel="group-container"
+                >
+                    <GroupItem />
+                    <GroupItem />
+                    <GroupItem />
+                    <GroupItem />
+                    <GroupItem />
+                    <GroupItem />
                 </ScrollView>
-                {/* <Button
+            </View>
+            <Text style={styles.sectionHeader}>New books</Text>
+            <View style={styles.bookList}>
+                <ScrollView horizontal={true} accessibilityLabel="book-list">
+                    {books?.map((book: Book, index) => {
+                        return (
+                            <BookItem
+                                key={index}
+                                title={book.title}
+                                imageLinks={book.imageLinks}
+                            />
+                        );
+                    })}
+                </ScrollView>
+            </View>
+            <View
+                style={styles.postsContainer}
+                accessibilityLabel="posts-container"
+            >
+                <BriefPostCard postType="group" groupName="test" />
+                <BriefPostCard postType="review" bookTitle="Book Title" />
+                <BriefPostCard postType="group" groupName="test" />
+                <BriefPostCard postType="review" bookTitle="Book Title" />
+            </View>
+            {/* <Button
                 title="Logout"
                 onPress={async () => {
                     await logout();
@@ -98,7 +86,6 @@ const Home = () => {
                     router.replace("/login");
                 }}
             /> */}
-            
         </ScrollView>
     );
 };
@@ -158,7 +145,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         height: 210,
     },
-    discussions: {
+    postsContainer: {
         marginTop: 10,
         paddingHorizontal: 10,
     },

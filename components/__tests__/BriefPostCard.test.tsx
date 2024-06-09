@@ -1,13 +1,15 @@
-import React from "react";
 import { render, userEvent } from "@testing-library/react-native";
+import React from "react";
 import BriefPostCard from "../BriefPostCard";
 
 describe("BriefPostCard", () => {
     const user = userEvent.setup({
         delay: 500,
     });
-    it("renders correctly", () => {
-        const { getByLabelText } = render(<BriefPostCard />);
+    it("renders group post correctly", () => {
+        const { getByLabelText } = render(
+            <BriefPostCard postType="group" groupName="test" />
+        );
 
         const postType = getByLabelText("post-name");
         const cardBody = getByLabelText("card-body");
@@ -23,9 +25,21 @@ describe("BriefPostCard", () => {
         expect(likeButton).toBeDefined();
         expect(commentButton).toBeDefined();
     });
+    it("render joined group post correctly", () => {
+        const { queryByLabelText } = render(
+            <BriefPostCard postType="group" groupName="test" isJoined />
+        );
+        expect(queryByLabelText("join-button")).toBeNull();
+    });
+    it("renders review post correctly", () => {
+        const { queryByLabelText } = render(
+            <BriefPostCard postType="review" bookTitle="test" />
+        );
+        expect(queryByLabelText("join-button")).toBeNull();
+    });
     it("toggles like button", async () => {
-        const { getByLabelText, getByTestId, queryByTestId } = render(
-            <BriefPostCard />
+        const { getByLabelText, queryByTestId } = render(
+            <BriefPostCard postType="group" groupName="test" />
         );
 
         const likeButton = getByLabelText("like-button");
