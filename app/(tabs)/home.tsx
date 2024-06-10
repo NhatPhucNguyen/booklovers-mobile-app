@@ -7,8 +7,17 @@ import {
     faRectangleList,
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { router } from "expo-router";
 import React from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+    Image,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
 type Book = {
     title: string;
@@ -23,61 +32,71 @@ const Home = () => {
         queryKey: ["newestBooks"],
     });
     return (
-        <ScrollView>
-            <View style={styles.header} accessibilityLabel="header">
-                <FontAwesomeIcon
-                    icon={faRectangleList}
-                    size={20}
-                    color={Colors.light.primary}
-                />
-                <Image
-                    source={require("../../assets/images/transparent-logo.png")}
-                    style={styles.logo}
-                />
-                <FontAwesomeIcon
-                    icon={faComment}
-                    size={20}
-                    color={Colors.light.primary}
-                />
-            </View>
+        <SafeAreaView style={styles.container}>
+            <ScrollView>
+                <View style={styles.header} accessibilityLabel="header">
+                    <FontAwesomeIcon
+                        icon={faRectangleList}
+                        size={20}
+                        color={Colors.light.primary}
+                    />
+                    <Image
+                        source={require("../../assets/images/transparent-logo.png")}
+                        style={styles.logo}
+                    />
+                    <Pressable
+                        onPress={() => {
+                            router.push("/chatList");
+                        }}
+                    >
+                        <FontAwesomeIcon
+                            icon={faComment}
+                            size={20}
+                            color={Colors.light.primary}
+                        />
+                    </Pressable>
+                </View>
 
-            <View style={styles.groupContainer}>
-                <ScrollView
-                    horizontal={true}
-                    accessibilityLabel="group-container"
+                <View style={styles.groupContainer}>
+                    <ScrollView
+                        horizontal={true}
+                        accessibilityLabel="group-container"
+                    >
+                        <GroupItem />
+                        <GroupItem />
+                        <GroupItem />
+                        <GroupItem />
+                        <GroupItem />
+                        <GroupItem />
+                    </ScrollView>
+                </View>
+                <Text style={styles.sectionHeader}>New books</Text>
+                <View style={styles.bookList}>
+                    <ScrollView
+                        horizontal={true}
+                        accessibilityLabel="book-list"
+                    >
+                        {books?.map((book: Book, index) => {
+                            return (
+                                <BookItem
+                                    key={index}
+                                    title={book.title}
+                                    imageLinks={book.imageLinks}
+                                />
+                            );
+                        })}
+                    </ScrollView>
+                </View>
+                <View
+                    style={styles.postsContainer}
+                    accessibilityLabel="posts-container"
                 >
-                    <GroupItem />
-                    <GroupItem />
-                    <GroupItem />
-                    <GroupItem />
-                    <GroupItem />
-                    <GroupItem />
-                </ScrollView>
-            </View>
-            <Text style={styles.sectionHeader}>New books</Text>
-            <View style={styles.bookList}>
-                <ScrollView horizontal={true} accessibilityLabel="book-list">
-                    {books?.map((book: Book, index) => {
-                        return (
-                            <BookItem
-                                key={index}
-                                title={book.title}
-                                imageLinks={book.imageLinks}
-                            />
-                        );
-                    })}
-                </ScrollView>
-            </View>
-            <View
-                style={styles.postsContainer}
-                accessibilityLabel="posts-container"
-            >
-                <BriefPostCard postType="group" groupName="test" />
-                <BriefPostCard postType="review" bookTitle="Book Title" />
-                <BriefPostCard postType="group" groupName="test" />
-                <BriefPostCard postType="review" bookTitle="Book Title" />
-            </View>
-            {/* <Button
+                    <BriefPostCard postType="group" groupName="test" />
+                    <BriefPostCard postType="review" bookTitle="Book Title" />
+                    <BriefPostCard postType="group" groupName="test" />
+                    <BriefPostCard postType="review" bookTitle="Book Title" />
+                </View>
+                {/* <Button
                 title="Logout"
                 onPress={async () => {
                     await logout();
@@ -86,7 +105,8 @@ const Home = () => {
                     router.replace("/login");
                 }}
             /> */}
-        </ScrollView>
+            </ScrollView>
+        </SafeAreaView>
     );
 };
 function GroupItem() {
@@ -101,6 +121,11 @@ function GroupItem() {
     );
 }
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: Colors.light.background,
+        alignItems: "center",
+    },
     logo: {
         width: 100,
         height: 50,

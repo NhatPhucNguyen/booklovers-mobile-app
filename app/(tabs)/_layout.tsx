@@ -1,10 +1,7 @@
-import { Colors } from "@/constants/Colors";
 import useAuthContext from "@/hooks/useAuthContext";
-import { Redirect, Slot } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { QueryClient, QueryClientProvider } from "react-query";
 const TabsLayout = () => {
@@ -16,18 +13,47 @@ const TabsLayout = () => {
     return (
         <QueryClientProvider client={client}>
             <StatusBar style="dark" />
-            <SafeAreaView style={styles.container}>
-                <Slot />
-            </SafeAreaView>
+            <Tabs>
+                <Tabs.Screen
+                    name="home"
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Tabs.Screen
+                    name="profile"
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Tabs.Screen
+                    name="myPosts"
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Tabs.Screen
+                    name="discover"
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Tabs.Screen
+                    name="notifications"
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Tabs.Screen
+                    name="(chat)"
+                    options={{
+                        href: null,
+                        headerShown: false,
+                    }}
+                />
+            </Tabs>
             <Toast />
         </QueryClientProvider>
     );
 };
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.light.background,
-        alignItems: "center",
-    },
-});
 export default TabsLayout;

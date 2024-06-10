@@ -29,7 +29,17 @@ const BriefPostCard = (props: BriefPostCardProps) => {
                             style={styles.postType}
                             accessibilityLabel="post-name"
                         >
-                            {`${props.postType}/${
+                            <Text
+                                style={{
+                                    color:
+                                        props.postType == "group"
+                                            ? Colors.light.green
+                                            : Colors.light.brown,
+                                }}
+                            >
+                                {`${props.postType}/`}
+                            </Text>
+                            {`${
                                 props.postType === "group"
                                     ? props.groupName
                                     : props.bookTitle

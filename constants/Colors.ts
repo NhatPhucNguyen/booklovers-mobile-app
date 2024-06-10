@@ -17,6 +17,10 @@ export const Colors = {
         primary: "#0080FF",
         secondary: "#E7EFF7",
         like: "#ff4e4e",
+        brown:"#8B4513",
+        green:"#008000",
+        lightBlue:"#D8E4F0",
+        placeHolder:"#A9A9A9",
     },
     dark: {
         text: "#ECEDEE",
