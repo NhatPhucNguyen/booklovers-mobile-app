@@ -24,7 +24,11 @@ export default function RootLayout() {
     }, []);
     return (
         <AuthContextProvider>
-            <Stack>
+            <Stack
+                screenOptions={{
+                    headerShown: false,
+                }}
+            >
                 <Stack.Screen
                     name="(tabs)"
                     options={{
@@ -43,6 +47,7 @@ export default function RootLayout() {
                         headerShown: false,
                     }}
                 />
+                <Stack.Screen name="user" />
             </Stack>
         </AuthContextProvider>
     );
