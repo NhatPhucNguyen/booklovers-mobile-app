@@ -1,3 +1,4 @@
+import Avatars from "@/constants/Avatars";
 import { Colors } from "@/constants/Colors";
 import { faComments, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
@@ -59,10 +60,7 @@ const BriefPostCard = (props: BriefPostCardProps) => {
             </View>
             <View style={styles.section} accessibilityLabel="card-body">
                 <View style={styles.creatorContainer}>
-                    <Image
-                        source={require("../assets/images/unknown-person.png")}
-                        style={styles.image}
-                    />
+                    <Image source={Avatars.default} style={styles.image} />
                     <Text style={styles.name}>Creator name</Text>
                     <Text style={{ fontWeight: "300" }}>2 hours ago</Text>
                 </View>

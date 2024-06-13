@@ -1,3 +1,4 @@
+import Avatars from "@/constants/Avatars";
 import { Colors } from "@/constants/Colors";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
@@ -6,7 +7,7 @@ const ChatCard = () => {
     return (
         <View style={styles.container}>
             <Image
-                source={require("../assets/images/unknown-person.png")}
+                source={Avatars.default}
                 accessibilityLabel="image"
                 style={styles.image}
             />

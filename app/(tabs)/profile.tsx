@@ -1,27 +1,28 @@
 import { logout } from "@/apis/auth";
 import { User, getCurrentUser } from "@/apis/user";
+import AvatarImage from "@/components/AvatarImage";
+import LoadingScreen from "@/components/LoadingScreen";
 import { Colors } from "@/constants/Colors";
 import useAuthContext from "@/hooks/useAuthContext";
 import { router } from "expo-router";
 import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
-const DEFAULT_AVATAR = "unknown-person.png";
 const Profile = () => {
     const { setAuth } = useAuthContext();
-    const { data: user } = useQuery<User>({
+    const { data: user, isLoading } = useQuery<User>({
         queryFn: getCurrentUser,
-        queryKey: ["currentUser"],
+        queryKey: "currentUser",
     });
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.section}>
-                <Image
-                    accessibilityLabel="image"
-                    source={require(`@/assets/images/${DEFAULT_AVATAR}`)}
-                    style={styles.image}
-                />
+                <AvatarImage center avatarName={user?.avatar} size="large" />
+                <Text style={styles.name}>{user?.name}</Text>
                 <Pressable
                     style={styles.button}
                     onPress={() => {
@@ -72,6 +73,7 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         margin: "auto",
+        borderRadius: 50,
     },
     button: {
         margin: "auto",
@@ -92,6 +94,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginBottom: 10,
         fontWeight: "bold",
+    },
+    name: {
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginTop: 10,
     },
 });
 export default Profile;

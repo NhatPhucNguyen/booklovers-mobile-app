@@ -1,7 +1,9 @@
-import { User, getCurrentUser, getUserById } from "@/apis/user";
+import { User, getUserById } from "@/apis/user";
+import AvatarImage from "@/components/AvatarImage";
 import BriefPostCard from "@/components/BriefPostCard";
 import EditUserForm from "@/components/EditUserForm";
 import LoadingScreen from "@/components/LoadingScreen";
+import Avatars from "@/constants/Avatars";
 import ModalContextProvider, { useModalContext } from "@/context/ModalContext";
 import { getData } from "@/lib/storage";
 import { AntDesign, Entypo, EvilIcons } from "@expo/vector-icons";
@@ -70,10 +72,7 @@ const UserDetail = () => {
             <ScrollView>
                 <View style={styles.header}>
                     <View style={styles.innerHeader}>
-                        <Image
-                            source={require("@/assets/images/unknown-person.png")}
-                            style={styles.image}
-                        />
+                        <AvatarImage avatarName={user.avatar} size="medium"/>
                         <View>
                             <Text style={{ fontWeight: "500", fontSize: 24 }}>
                                 {user.name}

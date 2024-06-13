@@ -1,8 +1,10 @@
 import { User, updateUser } from "@/apis/user";
 import { Colors } from "@/constants/Colors";
 import { useModalContext } from "@/context/ModalContext";
+import { Feather } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import {
     Control,
     Controller,
@@ -12,9 +14,11 @@ import {
     useForm,
 } from "react-hook-form";
 import {
+    FlatList,
     Image,
     KeyboardAvoidingView,
     Platform,
+    Pressable,
     ScrollView,
     StyleSheet,
     Text,
@@ -22,12 +26,19 @@ import {
     TextInputProps,
     View,
 } from "react-native";
+import Animated, {
+    Easing,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming,
+} from "react-native-reanimated";
 import { useMutation, useQueryClient } from "react-query";
 import { z } from "zod";
+import AvatarImage from "./AvatarImage";
 import Button from "./Button";
 import FormController from "./FormController";
-import { router, useLocalSearchParams } from "expo-router";
-const DEFAULT_AVATAR = "unknown-person.png";
+import Avatars from "@/constants/Avatars";
+import Toast from "react-native-toast-message";
 const EditUserSchema = z.object({
     name: z
         .string()
@@ -45,10 +56,13 @@ const EditUserForm = ({ user }: { user: User }) => {
     const { userId } = useLocalSearchParams();
     const client = useQueryClient();
     const { closeModal } = useModalContext();
+    const [showImagePicker, setShowImagePicker] = useState(false);
     const {
         control,
         formState: { errors },
         handleSubmit,
+        setValue,
+        watch,
     } = useForm<EditUserData>({
         resolver: zodResolver(EditUserSchema),
         defaultValues: {
@@ -61,8 +75,9 @@ const EditUserForm = ({ user }: { user: User }) => {
     const { mutateAsync: updateUserMutate } = useMutation({
         mutationFn: (user: EditUserData) => updateUser(user),
         mutationKey: ["updateUser"],
-        onSuccess: async () => {
-            await client.invalidateQueries([userId]);
+        onSuccess: () => {
+            client.invalidateQueries("currentUser");
+            client.invalidateQueries(userId);
             router.navigate({
                 pathname: "/[userId]",
                 params: { userId },
@@ -70,9 +85,12 @@ const EditUserForm = ({ user }: { user: User }) => {
         },
     });
     const onSubmit = async (data: EditUserData) => {
-        console.log(data);
         await updateUserMutate(data);
+        Toast.show({ type: "success", text1: "Profile updated!" });
         closeModal();
+    };
+    const setAvatar = (avatar: string) => {
+        setValue("avatar", avatar);
     };
     return (
         <View>
@@ -81,11 +99,27 @@ const EditUserForm = ({ user }: { user: User }) => {
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
                 <ScrollView>
-                    <Image
-                        accessibilityLabel="image"
-                        source={require(`@/assets/images/${DEFAULT_AVATAR}`)}
-                        style={styles.image}
-                    />
+                    <View
+                        style={{
+                            width: 100,
+                            margin: "auto",
+                            marginTop: 20,
+                        }}
+                    >
+                        <AvatarImage
+                            avatarName={watch("avatar") || user.avatar}
+                            center
+                            sizeNumber={100}
+                        />
+                        <Pressable
+                            style={styles.changeImgButton}
+                            onPress={() => {
+                                setShowImagePicker(true);
+                            }}
+                        >
+                            <Feather name="edit-3" size={24} color="white" />
+                        </Pressable>
+                    </View>
                     <View style={{ paddingBottom: 50, paddingHorizontal: 10 }}>
                         <EditUserForm.Controller
                             control={control}
@@ -131,6 +165,14 @@ const EditUserForm = ({ user }: { user: User }) => {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+            {showImagePicker && (
+                <EditUserForm.ImageSelectView
+                    close={() => {
+                        setShowImagePicker(false);
+                    }}
+                    setAvatar={setAvatar}
+                />
+            )}
         </View>
     );
 };
@@ -171,6 +213,63 @@ EditUserForm.Controller = function <Type extends FieldValues>(
         />
     );
 };
+EditUserForm.ImageSelectView = function ({
+    close,
+    setAvatar,
+}: {
+    close: () => void;
+    setAvatar: (avatar: string) => void;
+}) {
+    const opacity = useSharedValue(0);
+    const config = {
+        duration: 500,
+        easing: Easing.bezier(0.5, 0.01, 0, 1),
+    };
+
+    const style = useAnimatedStyle(() => {
+        return {
+            opacity: withTiming(opacity.value, config),
+        };
+    });
+
+    const renderAvatar = useCallback(({ item }: { item: string }) => {
+        return (
+            <Pressable
+                style={{
+                    margin: 5,
+                }}
+                onPress={() => {
+                    setAvatar(item);
+                    close();
+                }}
+            >
+                <AvatarImage avatarName={item} center sizeNumber={150} />
+            </Pressable>
+        );
+    }, []);
+    useEffect(() => {
+        opacity.value = 1;
+    }, []);
+    return (
+        <Animated.View style={[styles.changeImageView, style]}>
+            <View>
+                <FlatList
+                    data={Object.keys(Avatars)}
+                    renderItem={renderAvatar}
+                    keyExtractor={(item) => item}
+                    numColumns={2} // Adjust the number of columns here
+                    contentContainerStyle={styles.imageList}
+                    style={{ width: "100%", marginTop: 20 }}
+                />
+            </View>
+            <Button
+                title="Close"
+                onPress={close}
+                style={{ width: 200, margin: "auto" }}
+            />
+        </Animated.View>
+    );
+};
 const styles = StyleSheet.create({
     header: {
         textAlign: "center",
@@ -183,6 +282,7 @@ const styles = StyleSheet.create({
         height: 100,
         margin: "auto",
         marginTop: 20,
+        borderRadius: 50,
     },
     input: {
         width: "100%",
@@ -197,6 +297,27 @@ const styles = StyleSheet.create({
         color: "red",
         fontSize: 12,
         marginTop: 5,
+    },
+    changeImgButton: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        backgroundColor: "#00BBA5",
+        borderRadius: 50,
+        padding: 1,
+    },
+    changeImageView: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        backgroundColor: "#c0fff8",
+        zIndex: 20,
+        height: "100%",
+    },
+    imageList: {
+        alignItems: "flex-start",
+        margin: "auto",
     },
 });
 export default EditUserForm;
