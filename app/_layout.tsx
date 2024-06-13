@@ -8,7 +8,6 @@ export default function RootLayout() {
     useEffect(() => {
         const validateUser = async () => {
             const token = await getData("token");
-            console.log(token);
             if (!token) {
                 router.replace("/");
             }
@@ -47,7 +46,6 @@ export default function RootLayout() {
                         headerShown: false,
                     }}
                 />
-                <Stack.Screen name="user" />
             </Stack>
         </AuthContextProvider>
     );

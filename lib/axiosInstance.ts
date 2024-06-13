@@ -1,7 +1,6 @@
 import { apiUrl } from "@/config/apiUrl";
 import axios from "axios";
 import { getData } from "./storage";
-console.log(apiUrl);
 const axiosInstance = axios.create({
     baseURL: apiUrl,
     timeout: 10000,

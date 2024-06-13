@@ -1,18 +1,25 @@
 import { logout } from "@/apis/auth";
+import { User, getCurrentUser } from "@/apis/user";
 import { Colors } from "@/constants/Colors";
 import useAuthContext from "@/hooks/useAuthContext";
 import { router } from "expo-router";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useQuery } from "react-query";
+const DEFAULT_AVATAR = "unknown-person.png";
 const Profile = () => {
     const { setAuth } = useAuthContext();
+    const { data: user } = useQuery<User>({
+        queryFn: getCurrentUser,
+        queryKey: ["currentUser"],
+    });
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.section}>
                 <Image
                     accessibilityLabel="image"
-                    source={require("../../assets/images/unknown-person.png")}
+                    source={require(`@/assets/images/${DEFAULT_AVATAR}`)}
                     style={styles.image}
                 />
                 <Pressable
@@ -20,7 +27,7 @@ const Profile = () => {
                     onPress={() => {
                         router.push({
                             pathname: "/[userId]",
-                            params: { userId: "myId" },
+                            params: { userId: user?.id },
                         });
                     }}
                 >

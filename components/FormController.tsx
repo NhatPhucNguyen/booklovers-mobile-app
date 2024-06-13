@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 18,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        marginBottom: 5,
     },
 });
 export default FormController;

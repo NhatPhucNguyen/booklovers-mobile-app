@@ -1,13 +1,17 @@
 import { render } from "@testing-library/react-native";
 import Profile from "../profile";
 import AuthContextProvider from "@/context/AuthContext";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 describe("Profile", () => {
+    const client = new QueryClient();
     it("should render key elements", () => {
         const { getByText, getByLabelText } = render(
-            <AuthContextProvider>
-                <Profile />
-            </AuthContextProvider>
+            <QueryClientProvider client={client}>
+                <AuthContextProvider>
+                    <Profile />
+                </AuthContextProvider>
+            </QueryClientProvider>
         );
         expect(getByLabelText("image")).toBeDefined();
         expect(getByText("View Profile")).toBeDefined();
