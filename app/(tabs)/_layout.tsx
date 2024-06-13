@@ -7,12 +7,12 @@ import Toast from "react-native-toast-message";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Text } from "react-native";
 import { Colors } from "@/constants/Colors";
+const client = new QueryClient();
 const TabsLayout = () => {
     const { isAuthenticated } = useAuthContext();
     if (!isAuthenticated) {
         return <Redirect href="/home" />;
     }
-    const client = new QueryClient();
     return (
         <QueryClientProvider client={client}>
             <StatusBar style="dark" />

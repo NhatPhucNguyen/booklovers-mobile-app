@@ -1,4 +1,6 @@
+import { User, updateUser } from "@/apis/user";
 import { Colors } from "@/constants/Colors";
+import { useModalContext } from "@/context/ModalContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import {
@@ -20,27 +22,34 @@ import {
     TextInputProps,
     View,
 } from "react-native";
+import { useMutation, useQueryClient } from "react-query";
 import { z } from "zod";
-import FormController from "./FormController";
 import Button from "./Button";
-import { User } from "@/apis/user";
+import FormController from "./FormController";
+import { router, useLocalSearchParams } from "expo-router";
 const DEFAULT_AVATAR = "unknown-person.png";
 const EditUserSchema = z.object({
-    name: z.string().min(1, {
-        message: "Name is required",
-    }),
-    headline: z.optional(z.string()),
-    about: z.optional(z.string()),
-    avatar: z.optional(z.string()),
-    location: z.optional(z.string()),
+    name: z
+        .string()
+        .min(1, {
+            message: "Name is required",
+        })
+        .trim(),
+    headline: z.optional(z.string().trim()),
+    about: z.optional(z.string().trim()),
+    avatar: z.optional(z.string().trim()),
+    location: z.optional(z.string().trim()),
 });
-type EditUserForm = z.infer<typeof EditUserSchema>;
+export type EditUserData = z.infer<typeof EditUserSchema>;
 const EditUserForm = ({ user }: { user: User }) => {
+    const { userId } = useLocalSearchParams();
+    const client = useQueryClient();
+    const { closeModal } = useModalContext();
     const {
         control,
         formState: { errors },
         handleSubmit,
-    } = useForm<EditUserForm>({
+    } = useForm<EditUserData>({
         resolver: zodResolver(EditUserSchema),
         defaultValues: {
             name: user.name,
@@ -49,8 +58,21 @@ const EditUserForm = ({ user }: { user: User }) => {
             location: user.location,
         },
     });
-    const onSubmit = (data: EditUserForm) => {
+    const { mutateAsync: updateUserMutate } = useMutation({
+        mutationFn: (user: EditUserData) => updateUser(user),
+        mutationKey: ["updateUser"],
+        onSuccess: async () => {
+            await client.invalidateQueries([userId]);
+            router.navigate({
+                pathname: "/[userId]",
+                params: { userId },
+            });
+        },
+    });
+    const onSubmit = async (data: EditUserData) => {
         console.log(data);
+        await updateUserMutate(data);
+        closeModal();
     };
     return (
         <View>

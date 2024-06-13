@@ -1,10 +1,8 @@
 import { render, waitFor } from "@testing-library/react-native";
 import UserDetail from "../[userId]";
+import * as ReactQuery from "react-query";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ModalContextProvider from "@/context/ModalContext";
-jest.mock("../../../../apis/user", () => ({
-    getCurrentUser: jest.fn().mockResolvedValue({ id: "test", name: "test" }),
-}));
 jest.mock("expo-router", () => ({
     useLocalSearchParams: jest.fn().mockReturnValue({ userId: "test" }),
 }));
@@ -22,6 +20,13 @@ describe("UserDetail", () => {
             },
         },
     });
+    jest.spyOn(ReactQuery, "useQuery").mockImplementation(
+        jest.fn().mockReturnValue({
+            data: { id: "test", name: "test" },
+            isLoading: false,
+            isError: false,
+        })
+    );
     it("should render key elements", async () => {
         const { getByLabelText, getByText } = render(
             <QueryClientProvider client={client}>
@@ -39,6 +44,13 @@ describe("UserDetail", () => {
         });
     });
     it("should render the user detail", async () => {
+        jest.spyOn(ReactQuery, "useQuery").mockImplementation(
+            jest.fn().mockReturnValue({
+                data: { id: "test", name: "test" },
+                isLoading: false,
+                isError: false,
+            })
+        );
         const { getByText } = render(
             <QueryClientProvider client={client}>
                 <ModalContextProvider>
@@ -51,11 +63,11 @@ describe("UserDetail", () => {
         });
     });
     it("should render the user not found", async () => {
-        jest.mock("../../../../apis/user", () => ({
-            getCurrentUser: jest
-                .fn()
-                .mockRejectedValue(new Error("User not found")),
-        }));
+        jest.spyOn(ReactQuery, "useQuery").mockImplementation(
+            jest.fn().mockReturnValue({
+                isError: true,
+            })
+        );
         const { getByText } = render(
             <QueryClientProvider client={client}>
                 <ModalContextProvider>

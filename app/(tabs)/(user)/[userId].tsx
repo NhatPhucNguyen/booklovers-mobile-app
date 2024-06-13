@@ -1,6 +1,7 @@
-import { User, getCurrentUser } from "@/apis/user";
+import { User, getCurrentUser, getUserById } from "@/apis/user";
 import BriefPostCard from "@/components/BriefPostCard";
 import EditUserForm from "@/components/EditUserForm";
+import LoadingScreen from "@/components/LoadingScreen";
 import ModalContextProvider, { useModalContext } from "@/context/ModalContext";
 import { getData } from "@/lib/storage";
 import { AntDesign, Entypo, EvilIcons } from "@expo/vector-icons";
@@ -29,9 +30,8 @@ const UserDetail = () => {
         isError,
         isLoading,
     } = useQuery<User>({
-        queryFn: getCurrentUser,
-        queryKey: [isCurrentUser ? "currentUser" : userId],
-        enabled: isCurrentUser,
+        queryFn: () => getUserById(userId as string),
+        queryKey: [userId],
         onSuccess: async () => {
             await hideAsync();
         },
@@ -56,7 +56,7 @@ const UserDetail = () => {
         verifyUser();
     }, [userId]);
     if (isLoading) {
-        return;
+        return <LoadingScreen />;
     }
     if (!user || isError) {
         return (

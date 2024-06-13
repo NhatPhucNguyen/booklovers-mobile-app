@@ -1,9 +1,12 @@
-import { render, screen, userEvent } from "@testing-library/react-native";
+import { act, render, screen, userEvent } from "@testing-library/react-native";
 import EditUserForm from "../EditUserForm";
 import { User } from "@/apis/user";
+import { QueryClient, QueryClientProvider } from "react-query";
+import ModalContextProvider from "@/context/ModalContext";
 
 describe("EditUserForm", () => {
     const user = userEvent.setup();
+    const client = new QueryClient();
     const mockUser = {
         name: "mockName",
         headline: "mockHeadline",
@@ -12,7 +15,11 @@ describe("EditUserForm", () => {
     } as User;
     test("renders form fields", () => {
         const { getByLabelText, getByRole } = render(
-            <EditUserForm user={mockUser} />
+            <ModalContextProvider>
+                <QueryClientProvider client={client}>
+                    <EditUserForm user={mockUser} />
+                </QueryClientProvider>
+            </ModalContextProvider>
         );
         const loginButton = getByRole("button");
         // Assert that the form fields are rendered
@@ -24,7 +31,13 @@ describe("EditUserForm", () => {
     });
 
     test("handle change correctly", async () => {
-        const { getByLabelText } = render(<EditUserForm user={mockUser} />);
+        const { getByLabelText } = render(
+            <ModalContextProvider>
+                <QueryClientProvider client={client}>
+                    <EditUserForm user={mockUser} />
+                </QueryClientProvider>
+            </ModalContextProvider>
+        );
         const nameInput = getByLabelText("name");
         const headlineInput = getByLabelText("headline");
         const aboutInput = getByLabelText("about");
@@ -49,10 +62,13 @@ describe("EditUserForm", () => {
     });
     test("should render the error message when name is invalid", async () => {
         const { getByLabelText, getByRole } = render(
-            <EditUserForm user={mockUser} />
+            <ModalContextProvider>
+                <QueryClientProvider client={client}>
+                    <EditUserForm user={mockUser} />
+                </QueryClientProvider>
+            </ModalContextProvider>
         );
         const nameInput = getByLabelText("name");
-
         await user.clear(nameInput);
 
         const loginButton = getByRole("button");
