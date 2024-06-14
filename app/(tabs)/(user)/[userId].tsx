@@ -4,6 +4,7 @@ import BriefPostCard from "@/components/BriefPostCard";
 import EditUserForm from "@/components/EditUserForm";
 import LoadingScreen from "@/components/LoadingScreen";
 import Avatars from "@/constants/Avatars";
+import { Colors } from "@/constants/Colors";
 import ModalContextProvider, { useModalContext } from "@/context/ModalContext";
 import { getData } from "@/lib/storage";
 import { AntDesign, Entypo, EvilIcons } from "@expo/vector-icons";
@@ -149,6 +150,7 @@ function GroupCard() {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 10,
+        backgroundColor:Colors.light.background,
     },
     image: {
         width: 100,

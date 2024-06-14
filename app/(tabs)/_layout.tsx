@@ -1,12 +1,12 @@
+import { Colors } from "@/constants/Colors";
 import useAuthContext from "@/hooks/useAuthContext";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
+import { Text } from "react-native";
 import Toast from "react-native-toast-message";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Text } from "react-native";
-import { Colors } from "@/constants/Colors";
 const client = new QueryClient();
 const TabsLayout = () => {
     const { isAuthenticated } = useAuthContext();
@@ -23,9 +23,47 @@ const TabsLayout = () => {
                     tabBarActiveTintColor: Colors.light.primary,
                 }}
             >
-                <Tabs.Screen name="home" />
+                <Tabs.Screen
+                    name="home"
+                    options={{
+                        tabBarIcon: ({ color }) => {
+                            return (
+                                <TabBarIcon
+                                    icon={
+                                        <AntDesign
+                                            name="home"
+                                            size={24}
+                                            color={color}
+                                        />
+                                    }
+                                    title="Home"
+                                    color={color}
+                                />
+                            );
+                        },
+                    }}
+                />
                 <Tabs.Screen name="myPosts" />
-                <Tabs.Screen name="discover" />
+                <Tabs.Screen
+                    name="discover"
+                    options={{
+                        tabBarIcon: ({ color }) => {
+                            return (
+                                <TabBarIcon
+                                    icon={
+                                        <AntDesign
+                                            name="search1"
+                                            size={24}
+                                            color={color}
+                                        />
+                                    }
+                                    title="Discover"
+                                    color={color}
+                                />
+                            );
+                        },
+                    }}
+                />
                 <Tabs.Screen name="notifications" />
                 <Tabs.Screen
                     name="(chat)"

@@ -63,17 +63,15 @@ function Option({ title, onPress }: { title: string; onPress?: () => void }) {
     );
 }
 const styles = StyleSheet.create({
-    container: { paddingHorizontal: 20, marginTop: 20 },
+    container: {
+        backgroundColor: Colors.light.background,
+        flex: 1,
+        paddingHorizontal: 20,
+    },
     section: {
         paddingVertical: 20,
         borderBottomWidth: 2,
         borderBottomColor: Colors.light.placeHolder,
-    },
-    image: {
-        width: 100,
-        height: 100,
-        margin: "auto",
-        borderRadius: 50,
     },
     button: {
         margin: "auto",
