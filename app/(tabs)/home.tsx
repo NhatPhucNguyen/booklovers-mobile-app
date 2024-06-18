@@ -1,7 +1,8 @@
-import { getBooksBySubject, getNewestBooks } from "@/apis/book";
+import { getBooks } from "@/apis/book";
 import BookItem from "@/components/BookItem";
 import BriefPostCard from "@/components/BriefPostCard";
 import { Colors } from "@/constants/Colors";
+import { Book } from "@/interfaces/Book";
 import {
     faComment,
     faRectangleList,
@@ -19,17 +20,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
-type Book = {
-    title: string;
-    imageLinks: {
-        thumbnail: string;
-        smallThumbnail: string;
-    };
-};
 const Home = () => {
     const { data: books } = useQuery({
-        queryFn: getNewestBooks,
-        queryKey: ["newestBooks"],
+        queryFn: () => getBooks(),
+        queryKey: ["books"],
     });
     return (
         <SafeAreaView style={styles.container}>
@@ -72,20 +66,23 @@ const Home = () => {
                 </View>
                 <Text style={styles.sectionHeader}>New books</Text>
                 <View style={styles.bookList}>
-                    <ScrollView
-                        horizontal={true}
-                        accessibilityLabel="book-list"
-                    >
-                        {books?.map((book: Book, index) => {
-                            return (
-                                <BookItem
-                                    key={index}
-                                    title={book.title}
-                                    imageLinks={book.imageLinks}
-                                />
-                            );
-                        })}
-                    </ScrollView>
+                    {books && (
+                        <ScrollView
+                            horizontal={true}
+                            accessibilityLabel="book-list"
+                        >
+                            {books.map((book: Book, index) => {
+                                return (
+                                    <BookItem
+                                        key={index}
+                                        title={book.volumeInfo.title}
+                                        imageLinks={book.volumeInfo.imageLinks}
+                                        id={book.id}
+                                    />
+                                );
+                            })}
+                        </ScrollView>
+                    )}
                 </View>
                 <View
                     style={styles.postsContainer}

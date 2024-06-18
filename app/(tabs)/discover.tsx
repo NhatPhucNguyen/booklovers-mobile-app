@@ -1,16 +1,16 @@
+import BooksView from "@/components/discover/BooksView";
+import { Colors } from "@/constants/Colors";
+import { AntDesign } from "@expo/vector-icons";
+import React from "react";
 import {
-    View,
-    Text,
     StyleSheet,
+    Text,
     TextInput,
+    View,
     useWindowDimensions,
 } from "react-native";
-import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { AntDesign } from "@expo/vector-icons";
-import { Colors } from "@/constants/Colors";
+import { SafeAreaView, useSafeAreaFrame } from "react-native-safe-area-context";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
-import BooksView from "@/components/discover/BooksView";
 const renderTabBar = (props: any) => (
     <TabBar
         {...props}
@@ -23,7 +23,6 @@ const renderTabBar = (props: any) => (
 );
 const Discover = () => {
     const layout = useWindowDimensions();
-
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
         { key: "first", title: "Books" },
@@ -32,7 +31,7 @@ const Discover = () => {
     ]);
     return (
         <SafeAreaView
-            style={{ flex: 1, backgroundColor: Colors.light.background }}
+            style={{ flex: 1, backgroundColor: Colors.light.background,width:"100%" }}
         >
             <View style={styles.searchBar}>
                 <AntDesign name="search1" size={24} color="black" />
@@ -40,6 +39,7 @@ const Discover = () => {
                     placeholder="Search"
                     placeholderTextColor={Colors.light.placeHolder}
                     accessibilityLabel="search"
+                    style={{ width: "90%",marginHorizontal:"auto"}}
                 />
             </View>
             <TabView
@@ -89,9 +89,9 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.18,
         shadowRadius: 1.0,
         elevation: 1,
-        width: "90%",
-        margin: "auto",
         backgroundColor: "#e3e3e3",
+        width: "90%",
+        marginHorizontal: "auto",
     },
 });
 export default Discover;

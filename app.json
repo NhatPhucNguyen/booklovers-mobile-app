@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "book-lovers",
-    "slug": "book-lovers",
+    "name": "BookLovers",
+    "slug": "BookLovers",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/main-logo.png",

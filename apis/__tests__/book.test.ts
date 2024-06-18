@@ -1,40 +1,27 @@
+import axiosInstance from "@/lib/axiosInstance";
 import MockAdapter from "axios-mock-adapter";
-import { getBooksBySubject, getNewestBooks, googleBookAPI } from "../book";
-import axios from "axios";
-const mock = new MockAdapter(axios);
-const testKey = process.env.EXPO_PUBLIC_GG_API_KEY;
-describe("getBooksBySubject", () => {
-    it("should return books when the API call is successful", async () => {
-        const mockBooks = [{ volumeInfo: { title: "book1" } }];
-        const subject = "fiction";
-        mock.onGet(
-            `${googleBookAPI}?q=subject:${subject}&key=${testKey}`
-        ).reply(200, {
-            items: mockBooks,
-        });
-        const books = await getBooksBySubject(subject);
+import { getBooks } from "../book";
+import { mockBookData } from "@/__mocks__/mockData";
+const mock = new MockAdapter(axiosInstance);
+const searchKey = mockBookData[0].volumeInfo.title;
+const category = mockBookData[0].volumeInfo.categories[0];
+describe("getBooksByCategory", () => {
+    it("should return books correctly", async () => {
+        mock.onGet("/books").reply(200, mockBookData);
+        const books = await getBooks();
+        expect(books).toEqual(mockBookData);
+    });
+    it("should return books when the API call with query", async () => {
+        mock.onGet(`/books?searchKey=${searchKey}&category=${category}`).reply(
+            200,
+            mockBookData
+        );
+        const books = await getBooks({ searchKey, category });
 
-        expect(books).toEqual(mockBooks.map((item) => item.volumeInfo));
+        expect(books).toEqual(mockBookData);
     });
     it("should return error when API call is unsuccessful", async () => {
-        const subject = "fiction";
-        mock.onGet(
-            `${googleBookAPI}?q=subject:${subject}&key=${testKey}`
-        ).reply(500);
-        await expect(getBooksBySubject(subject)).rejects.toThrow();
-    });
-    //https://www.googleapis.com/books/v1/volumes?q=flowers&orderBy=newest&key=yourAPIKey
-});
-describe("get newest books", () => {
-    it("should return newest books when the API call is successful", async () => {
-        const mockBooks = [{ volumeInfo: { title: "book1" } }];
-        mock.onGet(
-            `${googleBookAPI}?q=%&orderBy=newest&key=${testKey}`
-        ).reply(200, {
-            items: mockBooks,
-        });
-        const books = await getNewestBooks();
-
-        expect(books).toEqual(mockBooks.map((item) => item.volumeInfo));
+        mock.onGet(`/books`).reply(500);
+        await expect(getBooks()).rejects.toThrow();
     });
 });

@@ -66,18 +66,6 @@ const TabsLayout = () => {
                 />
                 <Tabs.Screen name="notifications" />
                 <Tabs.Screen
-                    name="(chat)"
-                    options={{
-                        href: null,
-                    }}
-                />
-                <Tabs.Screen
-                    name="(user)"
-                    options={{
-                        href: null,
-                    }}
-                />
-                <Tabs.Screen
                     name="profile"
                     options={{
                         tabBarIcon: ({ color }) => {
@@ -95,6 +83,18 @@ const TabsLayout = () => {
                                 />
                             );
                         },
+                    }}
+                />
+                <Tabs.Screen
+                    name="(chat)"
+                    options={{
+                        href: null,
+                    }}
+                />
+                <Tabs.Screen
+                    name="(user)"
+                    options={{
+                        href: null,
                     }}
                 />
             </Tabs>

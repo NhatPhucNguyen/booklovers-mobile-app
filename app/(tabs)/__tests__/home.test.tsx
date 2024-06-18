@@ -1,24 +1,28 @@
-import { render } from "@testing-library/react-native";
+import { render, waitFor } from "@testing-library/react-native";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Home from "../home";
 const bookData = [
     {
-        title: "title",
-        imageLinks: {
-            thumbnail: "thumbnail",
-            smallThumbnail: "smallThumbnail",
+        id: "1",
+        volumeInfo: {
+            title: "title",
+            imageLinks: {
+                thumbnail: "thumbnail",
+                smallThumbnail: "smallThumbnail",
+            },
+            categories: ["category"],
         },
     },
 ];
 jest.mock("../../../apis/book", () => {
     return {
-        getNewestBooks: jest.fn().mockResolvedValue(bookData),
+        getBooks: jest.fn().mockResolvedValue(bookData),
     };
 });
 describe("Home Page", () => {
     const client = new QueryClient();
-    test("renders with key component", () => {
+    test("renders with key component", async () => {
         const { getByLabelText, getByText } = render(
             <QueryClientProvider client={client}>
                 <Home />
@@ -26,13 +30,17 @@ describe("Home Page", () => {
         );
         const header = getByLabelText("header");
         const groupContainer = getByLabelText("group-container");
-        const bookList = getByLabelText("book-list");
+
         const postsContainer = getByLabelText("posts-container");
         expect(header).toBeDefined();
         expect(groupContainer).toBeDefined();
-        expect(bookList).toBeDefined();
+
         expect(postsContainer).toBeDefined();
         expect(getByText("New books")).toBeDefined();
+        await waitFor(() => {
+            const bookList = getByLabelText("book-list");
+            expect(bookList).toBeDefined();
+        });
     });
     test("render books retrieved from api", () => {
         const { getByText } = render(
@@ -40,6 +48,6 @@ describe("Home Page", () => {
                 <Home />
             </QueryClientProvider>
         );
-        expect(getByText(bookData[0].title)).toBeDefined();
+        expect(getByText(bookData[0].volumeInfo.title)).toBeDefined();
     });
 });

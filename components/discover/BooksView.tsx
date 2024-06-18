@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import React from "react";
 import {
     FlatList,
@@ -9,7 +10,7 @@ import {
 const BOOK_CATEGORIES = [
     "All",
     "Fiction",
-    "Non-fiction",
+    "Computer",
     "Science",
     "Technology",
     "History",
@@ -27,7 +28,18 @@ const BOOK_CATEGORIES = [
 const BooksView = () => {
     const renderCategories = ({ item }: { item: string }) => {
         return (
-            <TouchableOpacity key={item} style={styles.categoryCard}>
+            <TouchableOpacity
+                key={item}
+                style={styles.categoryCard}
+                onPress={() => {
+                    router.push({
+                        pathname: "/books",
+                        params: {
+                            category: item,
+                        },
+                    });
+                }}
+            >
                 <Text
                     style={{
                         textAlign: "center",
@@ -55,7 +67,7 @@ const BooksView = () => {
 };
 const styles = StyleSheet.create({
     categoriesList: {
-        margin: "auto",
+        marginHorizontal: "auto",
     },
     categoryCard: {
         margin: 10,

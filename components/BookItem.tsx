@@ -1,19 +1,30 @@
-import { View, Text, StyleSheet, Image } from "react-native";
-import React from "react";
 import { Colors } from "@/constants/Colors";
+import { router } from "expo-router";
+import React from "react";
+import { Image, Pressable, StyleSheet, Text } from "react-native";
 type BookItemProps = {
     title: string;
-    imageLinks: {
-        thumbnail: string;
-        smallThumbnail: string;
+    imageLinks?: {
+        thumbnail?: string;
+        smallThumbnail?: string;
     };
+    details?: boolean;
+    id: string;
 };
 const TITLE_MAX_LENGTH = 30;
-const BookItem = ({ title, imageLinks }: BookItemProps) => {
+const BookItem = ({ title, imageLinks, details, id }: BookItemProps) => {
     return (
-        <View style={styles.bookItem}>
+        <Pressable
+            style={styles.bookItem}
+            onPress={() => {
+                router.push({
+                    pathname: "/books/[bookId]",
+                    params: { bookId: id },
+                });
+            }}
+        >
             <Image
-                source={{ uri: imageLinks.thumbnail }}
+                source={{ uri: imageLinks?.thumbnail }}
                 style={styles.bookImage}
             />
             <Text style={styles.bookTitle}>
@@ -21,16 +32,16 @@ const BookItem = ({ title, imageLinks }: BookItemProps) => {
                     ? `${title.substring(0, TITLE_MAX_LENGTH - 3)}...`
                     : title}
             </Text>
-        </View>
+        </Pressable>
     );
 };
 const styles = StyleSheet.create({
     bookItem: {
-        width: 150,
+        width: 170,
         height: 200,
         backgroundColor: Colors.light.secondary,
-        marginEnd: 10,
         paddingVertical: 5,
+        margin: "auto",
     },
     bookImage: {
         width: 120,
