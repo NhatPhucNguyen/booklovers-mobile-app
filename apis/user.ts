@@ -1,4 +1,4 @@
-import { EditUserData } from "@/components/EditUserForm";
+import { EditUserData } from "@/components/forms/EditUserForm";
 import axiosInstance from "@/lib/axiosInstance";
 export interface User {
     id: string;

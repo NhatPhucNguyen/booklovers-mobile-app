@@ -1,6 +1,6 @@
-import AuthFormInput from "@/components/AuthFormInput";
+import AuthFormInput from "@/components/forms/AuthFormInput";
 import Button from "@/components/Button";
-import FormController from "@/components/FormController";
+import FormController from "@/components/forms/FormController";
 import NavigationLink from "@/components/NavigationLink";
 import { Colors } from "@/constants/Colors";
 import { zodResolver } from "@hookform/resolvers/zod";

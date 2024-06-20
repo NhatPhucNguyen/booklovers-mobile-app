@@ -1,7 +1,7 @@
 import { User, getUserById } from "@/apis/user";
 import AvatarImage from "@/components/AvatarImage";
 import BriefPostCard from "@/components/BriefPostCard";
-import EditUserForm from "@/components/EditUserForm";
+import EditUserForm from "@/components/forms/EditUserForm";
 import LoadingScreen from "@/components/LoadingScreen";
 import Avatars from "@/constants/Avatars";
 import { Colors } from "@/constants/Colors";

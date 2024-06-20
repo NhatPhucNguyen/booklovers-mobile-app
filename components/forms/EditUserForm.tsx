@@ -34,8 +34,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { useMutation, useQueryClient } from "react-query";
 import { z } from "zod";
-import AvatarImage from "./AvatarImage";
-import Button from "./Button";
+import AvatarImage from "../AvatarImage";
+import Button from "../Button";
 import FormController from "./FormController";
 import Avatars from "@/constants/Avatars";
 import Toast from "react-native-toast-message";

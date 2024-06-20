@@ -10,7 +10,7 @@ export interface Book {
         description?: string;
         categories: string[];
         publisher?: string;
-        publishedDate?: Date;
+        publishedDate?: string;
     };
     reviews: Reviews[];
 }

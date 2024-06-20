@@ -1,5 +1,5 @@
 import { act, render, screen, userEvent } from "@testing-library/react-native";
-import EditUserForm from "../EditUserForm";
+import EditUserForm from "../forms/EditUserForm";
 import { User } from "@/apis/user";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ModalContextProvider from "@/context/ModalContext";

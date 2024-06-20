@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react-native";
 import React from "react";
-import AuthFormInput from "../AuthFormInput";
+import AuthFormInput from "../forms/AuthFormInput";
 jest.mock('@fortawesome/react-native-fontawesome', () => ({
     FontAwesomeIcon: ''
 }))
