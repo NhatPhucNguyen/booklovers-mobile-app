@@ -19,9 +19,14 @@ export const getBooks = async (query?: BookQuery): Promise<Book[]> => {
         throw new Error("Can not get newest books");
     }
 };
-export const getBookById = async (id: string): Promise<Book> => {
+export const getBookById = async (
+    id: string,
+    withReview?: boolean
+): Promise<Book> => {
     try {
-        const response = await axiosInstance.get(`/books/${id}`);
+        const response = await axiosInstance.get(
+            `/books/${id}?withReview=${withReview ? "true" : "false"}`
+        );
         return response.data;
     } catch (error) {
         console.log(error);

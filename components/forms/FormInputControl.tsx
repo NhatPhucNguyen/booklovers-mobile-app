@@ -28,6 +28,7 @@ type ControllerProps<Type extends FieldValues> = {
     control: Control<Type>;
     name: Path<Type>;
     label: string;
+    multiHeight?: number;
 } & TextInputProps;
 
 const FormInputControl = <Type extends FieldValues>(
@@ -43,7 +44,7 @@ const FormInputControl = <Type extends FieldValues>(
                             {...props}
                             style={[
                                 styles.input,
-                                props.multiline && { height: 200 },
+                                props.multiline && { height: props.multiHeight || 200 },
                             ]}
                             value={value}
                             onChangeText={onChange}

@@ -1,14 +1,26 @@
 import { render, userEvent } from "@testing-library/react-native";
 import React from "react";
 import BriefPostCard from "../BriefPostCard";
-
+const post = {
+    id: "123",
+    author: {
+        name: "John Doe",
+        id: "456",
+    },
+    content: "This is a test post",
+    updatedAt: new Date(),
+    _counts: {
+        like: 5,
+        comment: 3,
+    },
+};
 describe("BriefPostCard", () => {
     const user = userEvent.setup({
         delay: 500,
     });
     it("renders group post correctly", () => {
         const { getByLabelText } = render(
-            <BriefPostCard postType="group" groupName="test" />
+            <BriefPostCard postType="group" groupName="test" post={post}/>
         );
 
         const postType = getByLabelText("post-name");
@@ -27,19 +39,37 @@ describe("BriefPostCard", () => {
     });
     it("render joined group post correctly", () => {
         const { queryByLabelText } = render(
-            <BriefPostCard postType="group" groupName="test" isJoined />
+            <BriefPostCard
+                postType="group"
+                groupName="test"
+                isJoined
+                post={post}
+            />
         );
         expect(queryByLabelText("join-button")).toBeNull();
     });
     it("renders review post correctly", () => {
+        const review = {
+            id: "123",
+            author: {
+                name: "John Doe",
+                id: "456",
+            },
+            rating: 5,
+            content: "This book is amazing!",
+            updatedAt: new Date(),
+            _counts: {
+                like: 5,
+            },
+        };
         const { queryByLabelText } = render(
-            <BriefPostCard postType="review" bookTitle="test" />
+            <BriefPostCard postType="review" post={review} />
         );
         expect(queryByLabelText("join-button")).toBeNull();
     });
     it("toggles like button", async () => {
         const { getByLabelText, queryByTestId } = render(
-            <BriefPostCard postType="group" groupName="test" />
+            <BriefPostCard postType="group" groupName="test" post={post}/>
         );
 
         const likeButton = getByLabelText("like-button");

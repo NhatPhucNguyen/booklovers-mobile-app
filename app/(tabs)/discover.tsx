@@ -59,7 +59,6 @@ const Discover = () => {
     );
 };
 function Connections() {
-    console.log("Connections");
     return (
         <View>
             <Text>Connections</Text>

@@ -88,10 +88,7 @@ const Home = () => {
                     style={styles.postsContainer}
                     accessibilityLabel="posts-container"
                 >
-                    <BriefPostCard postType="group" groupName="test" />
-                    <BriefPostCard postType="review" bookTitle="Book Title" />
-                    <BriefPostCard postType="group" groupName="test" />
-                    <BriefPostCard postType="review" bookTitle="Book Title" />
+                    {/** Posts Card here */}
                 </View>
                 {/* <Button
                 title="Logout"

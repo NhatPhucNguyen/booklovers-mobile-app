@@ -12,16 +12,16 @@ export interface Book {
         publisher?: string;
         publishedDate?: string;
     };
-    reviews: Reviews[];
+    reviews: Review[];
 }
-export interface Reviews {
+export interface Review {
     id: string;
-    title: string;
     content: string;
     rating?: number;
     author: {
         name: string;
         id: string;
+        avatar?: string;
     };
     updatedAt: Date;
     _counts: {

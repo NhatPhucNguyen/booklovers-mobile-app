@@ -1,10 +1,12 @@
 import Avatars from "@/constants/Avatars";
 import { Colors } from "@/constants/Colors";
+import { Review } from "@/interfaces/Book";
 import { faComments, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Rating } from "react-native-ratings";
 type GroupPostType = {
     postType: "group";
     groupName: string;
@@ -12,9 +14,10 @@ type GroupPostType = {
 };
 type ReviewPostType = {
     postType: "review";
-    bookTitle: string;
+    hideTitle?: boolean;
+    title?: string;
 };
-type BriefPostCardProps = GroupPostType | ReviewPostType;
+type BriefPostCardProps = (GroupPostType | ReviewPostType) & { post: Review };
 const ICON_SIZE = 18;
 const BriefPostCard = (props: BriefPostCardProps) => {
     const [isPressLike, setPressLike] = React.useState(false);
@@ -26,26 +29,25 @@ const BriefPostCard = (props: BriefPostCardProps) => {
             <View style={styles.section} accessibilityLabel="card-header">
                 <View style={styles.header}>
                     <View>
-                        <Text
+                        <View
                             style={styles.postType}
                             accessibilityLabel="post-name"
                         >
-                            <Text
-                                style={{
-                                    color:
-                                        props.postType == "group"
-                                            ? Colors.light.green
-                                            : Colors.light.brown,
-                                }}
-                            >
-                                {`${props.postType}/`}
-                            </Text>
-                            {`${
-                                props.postType === "group"
-                                    ? props.groupName
-                                    : props.bookTitle
-                            }`}
-                        </Text>
+                            {props.postType == "group" ? (
+                                <Text style={{ color: Colors.light.brown }}>
+                                    {props.groupName}
+                                </Text>
+                            ) : (
+                                <View>
+                                    <Rating
+                                        type="star"
+                                        imageSize={18}
+                                        startingValue={props.post.rating || 0}
+                                        readonly
+                                    />
+                                </View>
+                            )}
+                        </View>
                     </View>
 
                     {props.postType == "group" && !props.isJoined && (
@@ -60,15 +62,19 @@ const BriefPostCard = (props: BriefPostCardProps) => {
             </View>
             <View style={styles.section} accessibilityLabel="card-body">
                 <View style={styles.creatorContainer}>
-                    <Image source={Avatars.default} style={styles.image} />
-                    <Text style={styles.name}>Creator name</Text>
+                    <Image
+                        source={Avatars[props.post.author.avatar || "default"]}
+                        style={styles.image}
+                    />
+                    <Text style={styles.name}>{props.post.author.name}</Text>
                     <Text style={{ fontWeight: "300" }}>2 hours ago</Text>
                 </View>
-                <Text style={styles.title}>Title goes here</Text>
+                {props.postType === "review" && !props.hideTitle && (
+                    <Text style={styles.title}>{props.title}</Text>
+                )}
             </View>
             <Text style={styles.content}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptatem, nemo...see more
+                {props.post.content || "No content"}
             </Text>
             <View
                 style={styles.interactionContainer}
@@ -121,10 +127,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
     },
-    postType: {
-        fontSize: 14,
-        fontWeight: "bold",
-    },
+    postType: {},
     title: {
         fontSize: 16,
         fontWeight: "bold",

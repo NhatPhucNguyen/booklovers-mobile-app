@@ -1,21 +1,17 @@
+import { createPost } from "@/apis/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { StyleSheet, Text, View } from "react-native";
-import { z } from "zod";
-import FormInputControl from "./FormInputControl";
 import { Rating } from "react-native-ratings";
+import Toast from "react-native-toast-message";
+import { useMutation, useQueryClient } from "react-query";
+import { z } from "zod";
 import Button from "../Button";
+import FormInputControl from "./FormInputControl";
+import { useModalContext } from "@/context/ModalContext";
 const DEFAULT_RATING = 3;
 const ReviewFormSchema = z.object({
-    title: z
-        .string({
-            message: "Title is required",
-        })
-        .min(3, {
-            message: "Title must be at least 3 characters long.",
-        })
-        .max(100),
     content: z
         .string({
             message: "Content is required",
@@ -29,6 +25,26 @@ type ReviewFormProps = {
     bookTitle: string;
 };
 const ReviewForm = ({ bookId, bookTitle }: ReviewFormProps) => {
+    const client = useQueryClient();
+    const { closeModal } = useModalContext();
+    const { mutateAsync: createReviewMutate } = useMutation({
+        mutationFn: createPost,
+        mutationKey: "createReview",
+        onError: (error:Error) => {
+            Toast.show({
+                type: "error",
+                text1: error.message,
+            });
+        },
+        onSuccess: () => {
+            Toast.show({
+                type: "success",
+                text1: "Review created successfully",
+            });
+            client.invalidateQueries(bookId);
+            closeModal();
+        },
+    });
     const {
         control,
         handleSubmit,
@@ -46,20 +62,15 @@ const ReviewForm = ({ bookId, bookTitle }: ReviewFormProps) => {
             <View>
                 <FormInputControl
                     control={control}
-                    error={errors.title}
-                    name="title"
-                    label="Title"
-                />
-                <FormInputControl
-                    control={control}
                     error={errors.content}
                     name="content"
                     label="Content"
                     multiline
+                    multiHeight={400}
                 />
                 <Rating
                     style={{ paddingVertical: 10 }}
-                    type="heart"
+                    type="star"
                     imageSize={27}
                     showRating
                     onFinishRating={(ratingCompleted: number) => {
@@ -69,8 +80,13 @@ const ReviewForm = ({ bookId, bookTitle }: ReviewFormProps) => {
                 />
                 <Button
                     title="Submit"
-                    onPress={handleSubmit((data) => {
-                        console.log(data);
+                    onPress={handleSubmit(async (data) => {
+                        await createReviewMutate({
+                            ...data,
+                            bookId,
+                            postType: "review",
+                            bookTitle,
+                        });
                     })}
                 />
             </View>

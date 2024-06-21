@@ -22,7 +22,7 @@ const BookDetails = () => {
         isLoading,
         isError,
     } = useQuery({
-        queryFn: () => getBookById(bookId!),
+        queryFn: () => getBookById(bookId!, true),
         queryKey: [bookId],
     });
     const [isReadMore, setReadMore] = React.useState(false);
@@ -113,7 +113,8 @@ const BookDetails = () => {
                                         <BriefPostCard
                                             key={review.id}
                                             postType="review"
-                                            bookTitle=""
+                                            post={review}
+                                            hideTitle
                                         />
                                     ))}
                                 </View>
@@ -128,7 +129,10 @@ const BookDetails = () => {
                 </View>
                 {visible && (
                     <ModalContextProvider.Modal>
-                        <ReviewForm />
+                        <ReviewForm
+                            bookId={book.id}
+                            bookTitle={book.volumeInfo.title}
+                        />
                     </ModalContextProvider.Modal>
                 )}
             </ScrollView>

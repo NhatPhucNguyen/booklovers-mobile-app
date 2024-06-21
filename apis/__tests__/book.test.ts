@@ -27,7 +27,7 @@ describe("Book API", () => {
     });
     describe("getBookById", () => {
         it("should return book correctly", async () => {
-            mock.onGet(`/books/${mockBookData[0].id}`).reply(
+            mock.onGet(`/books/${mockBookData[0].id}?withReview=false`).reply(
                 200,
                 mockBookData[0]
             );
@@ -35,7 +35,7 @@ describe("Book API", () => {
             expect(book).toEqual(mockBookData[0]);
         });
         it("should return error when API call is unsuccessful", async () => {
-            mock.onGet(`/books/${mockBookData[0].id}`).reply(500);
+            mock.onGet(`/books/${mockBookData[0].id}?withReview=false`).reply(500);
             await expect(getBookById(mockBookData[0].id)).rejects.toThrow();
         });
     });

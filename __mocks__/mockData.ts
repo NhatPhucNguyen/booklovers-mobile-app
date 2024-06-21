@@ -19,6 +19,11 @@ export const mockBookData = [
                 title: "Review Title",
                 content: "Review Content",
                 rating: 5,
+                author:{
+                    name: "reviewer",
+                    id: "1",
+                    avatar: "default",
+                },
             },
         ],
     },
