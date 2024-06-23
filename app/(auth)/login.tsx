@@ -44,7 +44,7 @@ const Login = () => {
         }
         if (accessToken) {
             await storeData("token", accessToken);
-            setAuth(true);
+            await setAuth(true);
             router.replace("/home");
             return;
         }

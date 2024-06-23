@@ -1,6 +1,7 @@
 import Avatars from "@/constants/Avatars";
 import { Colors } from "@/constants/Colors";
 import { Review } from "@/interfaces/Book";
+import { AntDesign } from "@expo/vector-icons";
 import { faComments, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -17,7 +18,10 @@ type ReviewPostType = {
     hideTitle?: boolean;
     title?: string;
 };
-type BriefPostCardProps = (GroupPostType | ReviewPostType) & { post: Review };
+type BriefPostCardProps = (GroupPostType | ReviewPostType) & {
+    post: Review;
+    modified?: boolean;
+};
 const ICON_SIZE = 18;
 const BriefPostCard = (props: BriefPostCardProps) => {
     const [isPressLike, setPressLike] = React.useState(false);
@@ -47,6 +51,22 @@ const BriefPostCard = (props: BriefPostCardProps) => {
                                     />
                                 </View>
                             )}
+                            {props.modified && <View style={styles.action}>
+                                <Pressable>
+                                    <AntDesign
+                                        name="edit"
+                                        size={18}
+                                        color={Colors.light.primary}
+                                    />
+                                </Pressable>
+                                <Pressable>
+                                    <AntDesign
+                                        name="delete"
+                                        size={18}
+                                        color={Colors.light.red}
+                                    />
+                                </Pressable>
+                            </View>}
                         </View>
                     </View>
 
@@ -127,7 +147,19 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
     },
-    postType: {},
+    postType: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+        alignItems: "center",
+    },
+    action: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 15,
+    },
     title: {
         fontSize: 16,
         fontWeight: "bold",

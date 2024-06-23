@@ -5,8 +5,10 @@ import Button from "@/components/Button";
 import LoadingScreen from "@/components/LoadingScreen";
 import ReviewForm from "@/components/forms/ReviewForm";
 import ModalContextProvider, { useModalContext } from "@/context/ModalContext";
+import useAuthContext from "@/hooks/useAuthContext";
+import { Review } from "@/interfaces/Book";
 import { useLocalSearchParams } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
@@ -17,6 +19,8 @@ const replaceHTMLTags = (description: string | undefined) => {
 };
 const BookDetails = () => {
     const { bookId } = useLocalSearchParams<{ bookId: string }>();
+    const { user } = useAuthContext();
+    const [isUserCreated, setUserCreated] = useState(true);
     const {
         data: book,
         isLoading,
@@ -24,6 +28,18 @@ const BookDetails = () => {
     } = useQuery({
         queryFn: () => getBookById(bookId!, true),
         queryKey: [bookId],
+        onSuccess: async (data) => {
+            if (
+                data.reviews?.some(
+                    (review: Review) => review.author.id === user?.id
+                )
+            ) {
+                setUserCreated(true);
+            } else {
+                setUserCreated(false);
+            }
+        },
+        cacheTime: 0,
     });
     const [isReadMore, setReadMore] = React.useState(false);
     const { openModal, visible } = useModalContext();
@@ -104,10 +120,12 @@ const BookDetails = () => {
                     <View>
                         {book.reviews ? (
                             <>
-                                <Button
-                                    title="Create new review"
-                                    onPress={handleClick}
-                                />
+                                {!isUserCreated && (
+                                    <Button
+                                        title="Create new review"
+                                        onPress={handleClick}
+                                    />
+                                )}
                                 <View style={{ marginTop: 5 }}>
                                     {book.reviews?.map((review) => (
                                         <BriefPostCard
@@ -115,6 +133,9 @@ const BookDetails = () => {
                                             postType="review"
                                             post={review}
                                             hideTitle
+                                            modified={
+                                                review.author.id === user?.id
+                                            }
                                         />
                                     ))}
                                 </View>

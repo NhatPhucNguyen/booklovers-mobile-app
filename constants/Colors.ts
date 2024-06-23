@@ -22,6 +22,7 @@ export const Colors = {
         lightBlue: "#D8E4F0",
         placeHolder: "#A9A9A9",
         inputBackground: "#c3e0dd",
+        red: "#cb0505",
     },
     dark: {
         text: "#ECEDEE",
