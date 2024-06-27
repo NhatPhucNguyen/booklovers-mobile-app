@@ -1,4 +1,4 @@
-import { createPost } from "@/apis/post";
+import { PostType, createPost, editPost } from "@/apis/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -20,17 +20,19 @@ const ReviewFormSchema = z.object({
     rating: z.number().int().min(1).max(5),
 });
 type ReviewFormType = z.infer<typeof ReviewFormSchema>;
+export type ReviewToEdit = ReviewFormType & { id: string };
 type ReviewFormProps = {
     bookId: string;
     bookTitle: string;
+    review?: ReviewToEdit;
 };
-const ReviewForm = ({ bookId, bookTitle }: ReviewFormProps) => {
+const ReviewForm = ({ bookId, bookTitle, review }: ReviewFormProps) => {
     const client = useQueryClient();
     const { closeModal } = useModalContext();
     const { mutateAsync: createReviewMutate } = useMutation({
         mutationFn: createPost,
         mutationKey: "createReview",
-        onError: (error:Error) => {
+        onError: (error: Error) => {
             Toast.show({
                 type: "error",
                 text1: error.message,
@@ -39,7 +41,25 @@ const ReviewForm = ({ bookId, bookTitle }: ReviewFormProps) => {
         onSuccess: () => {
             Toast.show({
                 type: "success",
-                text1: "Review created successfully",
+                text1: "Review created !",
+            });
+            client.invalidateQueries(bookId);
+            closeModal();
+        },
+    });
+    const { mutateAsync: editReviewMutate } = useMutation({
+        mutationFn: editPost,
+        mutationKey: "editReview",
+        onError: (error: Error) => {
+            Toast.show({
+                type: "error",
+                text1: error.message,
+            });
+        },
+        onSuccess: () => {
+            Toast.show({
+                type: "success",
+                text1: "Review updated !",
             });
             client.invalidateQueries(bookId);
             closeModal();
@@ -52,13 +72,21 @@ const ReviewForm = ({ bookId, bookTitle }: ReviewFormProps) => {
         setValue,
     } = useForm<ReviewFormType>({
         resolver: zodResolver(ReviewFormSchema),
-        defaultValues: {
-            rating: DEFAULT_RATING,
-        },
+        defaultValues: review
+            ? {
+                  content: review.content,
+                  rating: review.rating,
+              }
+            : {
+                  rating: DEFAULT_RATING,
+                  content: "",
+              },
     });
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Create Review</Text>
+            <Text style={styles.header}>
+                {review ? "Edit Review" : "Create Review"}
+            </Text>
             <View>
                 <FormInputControl
                     control={control}
@@ -76,17 +104,26 @@ const ReviewForm = ({ bookId, bookTitle }: ReviewFormProps) => {
                     onFinishRating={(ratingCompleted: number) => {
                         setValue("rating", ratingCompleted);
                     }}
-                    startingValue={DEFAULT_RATING}
+                    startingValue={review?.rating || DEFAULT_RATING}
                 />
                 <Button
-                    title="Submit"
+                    title={review ? "Save" : "Submit"}
                     onPress={handleSubmit(async (data) => {
-                        await createReviewMutate({
-                            ...data,
-                            bookId,
-                            postType: "review",
-                            bookTitle,
-                        });
+                        if (review) {
+                            await editReviewMutate({
+                                postType: PostType.Review,
+                                rating: data.rating,
+                                content: data.content,
+                                postId: review.id,
+                            });
+                        } else {
+                            await createReviewMutate({
+                                ...data,
+                                bookId,
+                                postType: PostType.Review,
+                                bookTitle,
+                            });
+                        }
                     })}
                 />
             </View>

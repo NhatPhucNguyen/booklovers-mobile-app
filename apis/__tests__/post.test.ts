@@ -1,5 +1,5 @@
 import axiosMock from "@/__mocks__/axiosMock";
-import { CreatePost, createPost, deletePost, likePost } from "@/apis/post";
+import { CreatePost, EditPost, PostType, createPost, deletePost, editPost, likePost } from "@/apis/post";
 
 describe("Post API", () => {
     describe("createPost", () => {
@@ -9,7 +9,7 @@ describe("Post API", () => {
                 content: "This book is amazing!",
                 rating: 5,
                 bookId: "123",
-                postType: "review",
+                postType: PostType.Review,
                 bookTitle: "The Great Gatsby",
             };
             axiosMock.onPost("/posts").reply(200);
@@ -20,7 +20,7 @@ describe("Post API", () => {
             // Test case 2: Create a discussion post
             const discussionPost: CreatePost = {
                 content: "Let's talk about this book!",
-                postType: "discussion",
+                postType: PostType.Discussion,
                 groupId: "456",
             };
             axiosMock.onPost("/posts").reply(200);
@@ -32,11 +32,35 @@ describe("Post API", () => {
                 content: "This book is amazing!",
                 rating: 5,
                 bookId: "123",
-                postType: "review",
+                postType: PostType.Review,
                 bookTitle: "The Great Gatsby",
             };
             axiosMock.onPost("/posts").reply(500);
             await expect(createPost(post)).rejects.toThrow();
+        });
+    });
+    describe("editPost", () => {
+        it("should edit post correctly", async () => {
+            // Test case 1: Edit a post
+            const post: EditPost = {
+                content: "This book is amazing!",
+                rating: 5,
+                postType: PostType.Review,
+                postId: "123",
+            };
+            axiosMock.onPatch(`/posts/${post.postId}`).reply(200);
+            const postEdited = await editPost(post);
+            expect(postEdited).toBe(true);
+        });
+        it("should return error when API call is unsuccessful", async () => {
+            const post: EditPost = {
+                content: "This book is amazing!",
+                rating: 5,
+                postType: PostType.Review,
+                postId: "123",
+            };
+            axiosMock.onPatch(`/posts/${post.postId}`).reply(500);
+            await expect(editPost(post)).rejects.toThrow();
         });
     });
     describe("deletePost", () => {

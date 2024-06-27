@@ -4,7 +4,7 @@ import BackHeader from "@/components/BackHeader";
 import BriefPostCard from "@/components/BriefPostCard";
 import Button from "@/components/Button";
 import LoadingScreen from "@/components/LoadingScreen";
-import ReviewForm from "@/components/forms/ReviewForm";
+import ReviewForm, { ReviewToEdit } from "@/components/forms/ReviewForm";
 import { Colors } from "@/constants/Colors";
 import ModalContextProvider, { useModalContext } from "@/context/ModalContext";
 import useAuthContext from "@/hooks/useAuthContext";
@@ -26,6 +26,7 @@ const BookDetails = () => {
     const { bookId } = useLocalSearchParams<{ bookId: string }>();
     const { user } = useAuthContext();
     const [isUserCreated, setUserCreated] = useState(true);
+    const [reviewToEdit, setReviewToEdit] = useState<ReviewToEdit | undefined>(undefined);
     const {
         data: book,
         isLoading,
@@ -166,6 +167,14 @@ const BookDetails = () => {
                                                         review.id
                                                     );
                                                 },
+                                                onEdit:() => {
+                                                    setReviewToEdit({
+                                                        content: review.content,
+                                                        rating: review.rating || 0,
+                                                        id: review.id,
+                                                    });
+                                                    openModal();
+                                                }
                                             }}
                                         />
                                     ))}
@@ -184,6 +193,7 @@ const BookDetails = () => {
                         <ReviewForm
                             bookId={book.id}
                             bookTitle={book.volumeInfo.title}
+                            review={reviewToEdit}
                         />
                     </ModalContextProvider.Modal>
                 )}
