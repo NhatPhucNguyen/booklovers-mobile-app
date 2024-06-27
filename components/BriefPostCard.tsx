@@ -1,6 +1,9 @@
+import { likePost } from "@/apis/post";
 import Avatars from "@/constants/Avatars";
 import { Colors } from "@/constants/Colors";
+import useAuthContext from "@/hooks/useAuthContext";
 import { Review } from "@/interfaces/Book";
+import { calculateTimeDiff } from "@/utils/calculateTimeDiff";
 import { AntDesign } from "@expo/vector-icons";
 import { faComments, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Rating } from "react-native-ratings";
+import { useMutation, useQueryClient } from "react-query";
 type GroupPostType = {
     postType: "group";
     groupName: string;
@@ -21,12 +25,32 @@ type ReviewPostType = {
 type BriefPostCardProps = (GroupPostType | ReviewPostType) & {
     post: Review;
     modified?: boolean;
+    actions?: {
+        onEdit?: () => void;
+        onDelete?: () => void;
+    };
 };
 const ICON_SIZE = 18;
 const BriefPostCard = (props: BriefPostCardProps) => {
-    const [isPressLike, setPressLike] = React.useState(false);
-    const handlePressLike = () => {
+    const client = useQueryClient();
+    const { user } = useAuthContext();
+    const { mutateAsync: likePostMutate } = useMutation({
+        mutationFn: likePost,
+        mutationKey: "likePost",
+        onSuccess: () => {
+            client.invalidateQueries();
+        },
+    });
+    const [isPressLike, setPressLike] = React.useState(
+        props.post.likes?.find((item) => item.id === user?.id)
+            ? true
+            : false
+    );
+    const [count, setCount] = React.useState(props.post._count.likes || 0);
+    const handlePressLike = async () => {
         setPressLike(!isPressLike);
+        setCount(isPressLike ? count - 1 : count + 1);
+        await likePostMutate(props.post.id);
     };
     return (
         <View style={styles.container}>
@@ -48,25 +72,30 @@ const BriefPostCard = (props: BriefPostCardProps) => {
                                         imageSize={18}
                                         startingValue={props.post.rating || 0}
                                         readonly
+                                        tintColor={Colors.light.secondary}
                                     />
                                 </View>
                             )}
-                            {props.modified && <View style={styles.action}>
-                                <Pressable>
-                                    <AntDesign
-                                        name="edit"
-                                        size={18}
-                                        color={Colors.light.primary}
-                                    />
-                                </Pressable>
-                                <Pressable>
-                                    <AntDesign
-                                        name="delete"
-                                        size={18}
-                                        color={Colors.light.red}
-                                    />
-                                </Pressable>
-                            </View>}
+                            {props.modified && (
+                                <View style={styles.action}>
+                                    <Pressable onPress={props.actions?.onEdit}>
+                                        <AntDesign
+                                            name="edit"
+                                            size={18}
+                                            color={Colors.light.primary}
+                                        />
+                                    </Pressable>
+                                    <Pressable
+                                        onPress={props.actions?.onDelete}
+                                    >
+                                        <AntDesign
+                                            name="delete"
+                                            size={18}
+                                            color={Colors.light.red}
+                                        />
+                                    </Pressable>
+                                </View>
+                            )}
                         </View>
                     </View>
 
@@ -87,7 +116,9 @@ const BriefPostCard = (props: BriefPostCardProps) => {
                         style={styles.image}
                     />
                     <Text style={styles.name}>{props.post.author.name}</Text>
-                    <Text style={{ fontWeight: "300" }}>2 hours ago</Text>
+                    <Text style={{ fontWeight: "300" }}>
+                        {calculateTimeDiff(props.post.updatedAt)}
+                    </Text>
                 </View>
                 {props.postType === "review" && !props.hideTitle && (
                     <Text style={styles.title}>{props.title}</Text>
@@ -119,14 +150,14 @@ const BriefPostCard = (props: BriefPostCardProps) => {
                             testID="like-icon"
                         />
                     )}
-                    <Text style={styles.iconText}>12</Text>
+                    <Text style={styles.iconText}>{count}</Text>
                 </Pressable>
                 <Pressable
                     style={styles.iconWrapper}
                     accessibilityLabel="comment-button"
                 >
                     <FontAwesomeIcon icon={faComments} size={ICON_SIZE} />
-                    <Text style={styles.iconText}>12</Text>
+                    <Text style={styles.iconText}>N/A</Text>
                 </Pressable>
             </View>
         </View>

@@ -1,5 +1,8 @@
+import { mockBookData } from "@/__mocks__/mockData";
+import AuthContextProvider from "@/context/AuthContext";
 import { render, userEvent } from "@testing-library/react-native";
 import React from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
 import BriefPostCard from "../BriefPostCard";
 const post = {
     id: "123",
@@ -9,18 +12,32 @@ const post = {
     },
     content: "This is a test post",
     updatedAt: new Date(),
-    _counts: {
-        like: 5,
-        comment: 3,
+    _count: {
+        likes: 5,
     },
+    likes: [],
 };
+const createWrapper = () => {
+    const client = new QueryClient();
+    return ({ children }: { children: React.ReactNode }) => (
+        <QueryClientProvider client={client}>
+            <AuthContextProvider>{children}</AuthContextProvider>
+        </QueryClientProvider>
+    );
+};
+jest.mock("@/apis/post", () => ({
+    likePost: jest.fn().mockResolvedValueOnce(true),
+}));
 describe("BriefPostCard", () => {
     const user = userEvent.setup({
         delay: 500,
     });
     it("renders group post correctly", () => {
         const { getByLabelText } = render(
-            <BriefPostCard postType="group" groupName="test" post={post}/>
+            <BriefPostCard postType="group" groupName="test" post={post} />,
+            {
+                wrapper: createWrapper(),
+            }
         );
 
         const postType = getByLabelText("post-name");
@@ -44,32 +61,32 @@ describe("BriefPostCard", () => {
                 groupName="test"
                 isJoined
                 post={post}
-            />
+            />,
+            {
+                wrapper: createWrapper(),
+            }
         );
         expect(queryByLabelText("join-button")).toBeNull();
     });
     it("renders review post correctly", () => {
-        const review = {
-            id: "123",
-            author: {
-                name: "John Doe",
-                id: "456",
-            },
-            rating: 5,
-            content: "This book is amazing!",
-            updatedAt: new Date(),
-            _counts: {
-                like: 5,
-            },
-        };
+        const review = mockBookData[0].reviews[0];
         const { queryByLabelText } = render(
-            <BriefPostCard postType="review" post={review} />
+            <BriefPostCard
+                postType="review"
+                post={{ ...review, updatedAt: new Date() }}
+            />,
+            {
+                wrapper: createWrapper(),
+            }
         );
         expect(queryByLabelText("join-button")).toBeNull();
     });
     it("toggles like button", async () => {
         const { getByLabelText, queryByTestId } = render(
-            <BriefPostCard postType="group" groupName="test" post={post}/>
+            <BriefPostCard postType="group" groupName="test" post={post} />,
+            {
+                wrapper: createWrapper(),
+            }
         );
 
         const likeButton = getByLabelText("like-button");

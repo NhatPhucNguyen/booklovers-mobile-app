@@ -11,7 +11,7 @@ export const mockBookData = [
             description: "Book Description",
             categories: ["Category"],
             publisher: "Publisher",
-            publishedDate: "1-1-1111",
+            publishedDate: "1-1-2000",
         },
         reviews: [
             {
@@ -24,6 +24,11 @@ export const mockBookData = [
                     id: "1",
                     avatar: "default",
                 },
+                updatedAt: "1-1-2000",
+                _count: {
+                    likes: 1,
+                },
+                likes: [{ id: "1" }],
             },
         ],
     },

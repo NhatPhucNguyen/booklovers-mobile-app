@@ -13,6 +13,7 @@ export interface Book {
         publishedDate?: string;
     };
     reviews: Review[];
+    avgRating: number;
 }
 export interface Review {
     id: string;
@@ -24,7 +25,8 @@ export interface Review {
         avatar?: string;
     };
     updatedAt: Date;
-    _counts: {
-        like: number;
+    _count: {
+        likes: number;
     };
+    likes: { id: string }[];
 }

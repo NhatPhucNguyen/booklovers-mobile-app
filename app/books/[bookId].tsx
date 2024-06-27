@@ -1,23 +1,28 @@
 import { getBookById } from "@/apis/book";
+import { deletePost } from "@/apis/post";
 import BackHeader from "@/components/BackHeader";
 import BriefPostCard from "@/components/BriefPostCard";
 import Button from "@/components/Button";
 import LoadingScreen from "@/components/LoadingScreen";
 import ReviewForm from "@/components/forms/ReviewForm";
+import { Colors } from "@/constants/Colors";
 import ModalContextProvider, { useModalContext } from "@/context/ModalContext";
 import useAuthContext from "@/hooks/useAuthContext";
 import { Review } from "@/interfaces/Book";
 import { useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Rating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useQuery } from "react-query";
+import Toast from "react-native-toast-message";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 //Book description may contain html tags (<p>,</p>,<br>)
 const replaceHTMLTags = (description: string | undefined) => {
     if (!description) return description;
     return description?.replaceAll(/<\/?[^>]+(>|$)/g, "");
 };
 const BookDetails = () => {
+    const client = useQueryClient();
     const { bookId } = useLocalSearchParams<{ bookId: string }>();
     const { user } = useAuthContext();
     const [isUserCreated, setUserCreated] = useState(true);
@@ -40,6 +45,17 @@ const BookDetails = () => {
             }
         },
         cacheTime: 0,
+    });
+    const { mutateAsync: deletePostMutate } = useMutation({
+        mutationFn: deletePost,
+        mutationKey: "deletePost",
+        onError: (error: Error) => {
+            Toast.show({ type: "error", text1: error.message });
+        },
+        onSuccess: () => {
+            client.invalidateQueries(bookId);
+            Toast.show({ type: "success", text1: "Review deleted" });
+        },
     });
     const [isReadMore, setReadMore] = React.useState(false);
     const { openModal, visible } = useModalContext();
@@ -65,6 +81,14 @@ const BookDetails = () => {
                 <Image
                     source={{ uri: book.volumeInfo.imageLinks?.thumbnail }}
                     style={styles.bookImage}
+                />
+                <Rating
+                    type="star"
+                    imageSize={20}
+                    startingValue={book.avgRating || 0}
+                    readonly
+                    tintColor={Colors.light.primary}
+                    style={{ marginTop: 5, padding: 5 }}
                 />
                 <View
                     style={{
@@ -136,6 +160,13 @@ const BookDetails = () => {
                                             modified={
                                                 review.author.id === user?.id
                                             }
+                                            actions={{
+                                                onDelete: async () => {
+                                                    await deletePostMutate(
+                                                        review.id
+                                                    );
+                                                },
+                                            }}
                                         />
                                     ))}
                                 </View>
