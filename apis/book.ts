@@ -3,6 +3,7 @@ import axiosInstance from "@/lib/axiosInstance";
 type BookQuery = {
     category?: string;
     q?: string;
+    startIndex?: number;
 };
 export const getBooks = async (query?: BookQuery): Promise<Book[]> => {
     try {
@@ -11,7 +12,9 @@ export const getBooks = async (query?: BookQuery): Promise<Book[]> => {
             return response.data;
         }
         const response = await axiosInstance.get(
-            `/books?q=${query?.q}&category=${query?.category}`
+            `/books?q=${query?.q}&startIndex=${
+                query?.startIndex || 1
+            }&category=${query?.category || ""}`
         );
         return response.data;
     } catch (error) {

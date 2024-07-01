@@ -26,7 +26,9 @@ const BookDetails = () => {
     const { bookId } = useLocalSearchParams<{ bookId: string }>();
     const { user } = useAuthContext();
     const [isUserCreated, setUserCreated] = useState(true);
-    const [reviewToEdit, setReviewToEdit] = useState<ReviewToEdit | undefined>(undefined);
+    const [reviewToEdit, setReviewToEdit] = useState<ReviewToEdit | undefined>(
+        undefined
+    );
     const {
         data: book,
         isLoading,
@@ -83,14 +85,33 @@ const BookDetails = () => {
                     source={{ uri: book.imageLinks?.thumbnail }}
                     style={styles.bookImage}
                 />
-                <Rating
-                    type="star"
-                    imageSize={20}
-                    startingValue={book.avgRating || 0}
-                    readonly
-                    tintColor={Colors.light.primary}
-                    style={{ marginTop: 5, padding: 5 }}
-                />
+                <View style={styles.ratingContainer}>
+                    <View style={styles.ratingSource}>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                fontWeight: "bold",
+                                color: "brown",
+                            }}
+                        >
+                            Open Library
+                        </Text>
+                        <ReadonlyRating rating={book.avgRating || 0}/>
+                    </View>
+                    <View style={styles.ratingSource}>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                fontWeight: "bold",
+                                color: "green",
+                            }}
+                        >
+                            BookLovers
+                        </Text>
+                        <ReadonlyRating rating={book.userRating || 0}/>
+                    </View>
+                </View>
+
                 <View
                     style={{
                         marginTop: 10,
@@ -159,14 +180,15 @@ const BookDetails = () => {
                                                         review.id
                                                     );
                                                 },
-                                                onEdit:() => {
+                                                onEdit: () => {
                                                     setReviewToEdit({
                                                         content: review.content,
-                                                        rating: review.rating || 0,
+                                                        rating:
+                                                            review.rating || 0,
                                                         id: review.id,
                                                     });
                                                     openModal();
-                                                }
+                                                },
                                             }}
                                         />
                                     ))}
@@ -201,6 +223,20 @@ function Field({ label, value }: { label: string; value?: string }) {
         </Text>
     );
 }
+function ReadonlyRating({ rating }: { rating: number }) {
+    return (
+        <Rating
+            type="star"
+            imageSize={20}
+            startingValue={rating}
+            readonly
+            tintColor={Colors.light.primary}
+            style={{ marginTop: 5, padding: 5 }}
+            showRating
+            showReadOnlyText={false}
+        />
+    );
+}
 const styles = StyleSheet.create({
     bookImage: {
         width: 150,
@@ -212,5 +248,12 @@ const styles = StyleSheet.create({
     label: {
         fontWeight: "bold",
     },
+    ratingText: {},
+    ratingContainer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginTop: 10,
+    },
+    ratingSource: {},
 });
 export default BookDetails;

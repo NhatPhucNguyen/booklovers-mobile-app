@@ -14,7 +14,7 @@ describe("Book API", () => {
         });
         it("should return books when the API call with query", async () => {
             mock.onGet(
-                `/books?q=${q}&category=${category}`
+                `/books?q=${q}&startIndex=1&category=${category}`
             ).reply(200, mockBookData);
             const books = await getBooks({ q, category });
 
