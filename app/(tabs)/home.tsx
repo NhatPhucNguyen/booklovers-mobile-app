@@ -75,8 +75,8 @@ const Home = () => {
                                 return (
                                     <BookItem
                                         key={index}
-                                        title={book.volumeInfo.title}
-                                        imageLinks={book.volumeInfo.imageLinks}
+                                        title={book.title}
+                                        imageLinks={book.imageLinks}
                                         id={book.id}
                                     />
                                 );

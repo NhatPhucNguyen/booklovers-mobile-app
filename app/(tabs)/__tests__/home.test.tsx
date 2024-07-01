@@ -5,14 +5,12 @@ import Home from "../home";
 const bookData = [
     {
         id: "1",
-        volumeInfo: {
-            title: "title",
-            imageLinks: {
-                thumbnail: "thumbnail",
-                smallThumbnail: "smallThumbnail",
-            },
-            categories: ["category"],
+        title: "title",
+        imageLinks: {
+            thumbnail: "thumbnail",
+            smallThumbnail: "smallThumbnail",
         },
+        categories: ["category"],
     },
 ];
 jest.mock("../../../apis/book", () => {
@@ -48,6 +46,6 @@ describe("Home Page", () => {
                 <Home />
             </QueryClientProvider>
         );
-        expect(getByText(bookData[0].volumeInfo.title)).toBeDefined();
+        expect(getByText(bookData[0].title)).toBeDefined();
     });
 });

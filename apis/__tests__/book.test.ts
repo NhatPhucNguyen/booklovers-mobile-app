@@ -3,8 +3,8 @@ import MockAdapter from "axios-mock-adapter";
 import { getBookById, getBooks } from "../book";
 import { mockBookData } from "@/__mocks__/mockData";
 const mock = new MockAdapter(axiosInstance);
-const searchKey = mockBookData[0].volumeInfo.title;
-const category = mockBookData[0].volumeInfo.categories[0];
+const q = mockBookData[0].title;
+const category = mockBookData[0].categories[0];
 describe("Book API", () => {
     describe("getBooksByCategory", () => {
         it("should return books correctly", async () => {
@@ -14,9 +14,9 @@ describe("Book API", () => {
         });
         it("should return books when the API call with query", async () => {
             mock.onGet(
-                `/books?searchKey=${searchKey}&category=${category}`
+                `/books?q=${q}&category=${category}`
             ).reply(200, mockBookData);
-            const books = await getBooks({ searchKey, category });
+            const books = await getBooks({ q, category });
 
             expect(books).toEqual(mockBookData);
         });

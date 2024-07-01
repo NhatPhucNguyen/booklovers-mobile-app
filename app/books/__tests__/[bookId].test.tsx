@@ -27,16 +27,14 @@ describe("Book Detail", () => {
             </QueryClientProvider>
         );
         await waitFor(() => {
-            expect(getByText(mockBook.volumeInfo.publishedDate)).toBeDefined();
-            expect(getByText(mockBook.volumeInfo.title)).toBeDefined();
+            expect(getByText(mockBook.title)).toBeDefined();
             expect(
-                getByText(mockBook.volumeInfo.categories.join(""))
+                getByText(mockBook.categories.join(""))
             ).toBeDefined();
             expect(
-                getByText(mockBook.volumeInfo.authors.join(", "))
+                getByText(mockBook.authors.join(", "))
             ).toBeDefined();
-            expect(getByText(mockBook.volumeInfo.publisher)).toBeDefined();
-            expect(getByText(mockBook.volumeInfo.description)).toBeDefined();
+            expect(getByText(mockBook.description)).toBeDefined();
         });
     });
 });

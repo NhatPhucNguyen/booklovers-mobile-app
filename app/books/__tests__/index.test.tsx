@@ -28,7 +28,7 @@ describe("Books Tab", () => {
             </QueryClientProvider>
         );
         await waitFor(() => {
-            expect(getByText(mockBookData[0].volumeInfo.title)).toBeDefined();
+            expect(getByText(mockBookData[0].title)).toBeDefined();
         });
     });
 });

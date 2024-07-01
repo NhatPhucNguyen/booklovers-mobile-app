@@ -1,19 +1,19 @@
 export interface Book {
     id: string;
-    volumeInfo: {
-        title: string;
-        imageLinks?: {
-            thumbnail?: string;
-            smallThumbnail?: string;
-        };
-        authors?: string[];
-        description?: string;
-        categories: string[];
-        publisher?: string;
-        publishedDate?: string;
+    title: string;
+    imageLinks?: {
+        thumbnail: string;
+        smallThumbnail: string;
+        largeThumbnail: string;
     };
+    authors?: string[];
+    description?: string;
+    categories: string[];
+    publisher?: string;
+    publishedDate?: string;
     reviews: Review[];
-    avgRating: number;
+    avgRating?: number;
+    userRating?: number;
 }
 export interface Review {
     id: string;

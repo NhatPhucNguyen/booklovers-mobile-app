@@ -72,8 +72,8 @@ const BooksTab = () => {
                                 key={index}
                             >
                                 <BookItem
-                                    title={book.volumeInfo.title}
-                                    imageLinks={book.volumeInfo.imageLinks}
+                                    title={book.title}
+                                    imageLinks={book.imageLinks}
                                     id={book.id}
                                 />
                             </View>

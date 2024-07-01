@@ -1,25 +1,21 @@
 export const mockBookData = [
     {
         id: "1",
-        volumeInfo: {
-            title: "Book Title",
-            imageLinks: {
-                thumbnail: "https://via.placeholder.com/150",
-                smallThumbnail: "https://via.placeholder.com/50",
-            },
-            authors: ["Author Name"],
-            description: "Book Description",
-            categories: ["Category"],
-            publisher: "Publisher",
-            publishedDate: "1-1-2000",
+        title: "Book Title",
+        imageLinks: {
+            thumbnail: "https://via.placeholder.com/150",
+            smallThumbnail: "https://via.placeholder.com/50",
         },
+        authors: ["Author Name"],
+        description: "Book Description",
+        categories: ["Category"],
         reviews: [
             {
                 id: "1",
                 title: "Review Title",
                 content: "Review Content",
                 rating: 5,
-                author:{
+                author: {
                     name: "reviewer",
                     id: "1",
                     avatar: "default",

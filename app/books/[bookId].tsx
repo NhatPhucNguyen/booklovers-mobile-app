@@ -60,7 +60,7 @@ const BookDetails = () => {
     });
     const [isReadMore, setReadMore] = React.useState(false);
     const { openModal, visible } = useModalContext();
-    const description = replaceHTMLTags(book?.volumeInfo.description);
+    const description = replaceHTMLTags(book?.description);
     if (isLoading) {
         return <LoadingScreen />;
     }
@@ -80,7 +80,7 @@ const BookDetails = () => {
             <BackHeader />
             <ScrollView style={{ minHeight: "100%" }}>
                 <Image
-                    source={{ uri: book.volumeInfo.imageLinks?.thumbnail }}
+                    source={{ uri: book.imageLinks?.thumbnail }}
                     style={styles.bookImage}
                 />
                 <Rating
@@ -98,22 +98,14 @@ const BookDetails = () => {
                         paddingBottom: 50,
                     }}
                 >
-                    <Field label={"Title"} value={book.volumeInfo.title} />
+                    <Field label={"Title"} value={book.title} />
                     <Field
                         label={"Author(s)"}
-                        value={book.volumeInfo.authors?.join(", ")}
-                    />
-                    <Field
-                        label={"Published in"}
-                        value={book.volumeInfo.publishedDate}
-                    />
-                    <Field
-                        label="Publisher"
-                        value={book.volumeInfo.publisher}
+                        value={book.authors?.join(", ")}
                     />
                     <Field
                         label="Categories"
-                        value={book.volumeInfo.categories?.join("")}
+                        value={book.categories?.join(", ")}
                     />
                     <>
                         {!isReadMore &&
@@ -192,7 +184,7 @@ const BookDetails = () => {
                     <ModalContextProvider.Modal>
                         <ReviewForm
                             bookId={book.id}
-                            bookTitle={book.volumeInfo.title}
+                            bookTitle={book.title}
                             review={reviewToEdit}
                         />
                     </ModalContextProvider.Modal>

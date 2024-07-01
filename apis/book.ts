@@ -2,7 +2,7 @@ import { Book } from "@/interfaces/Book";
 import axiosInstance from "@/lib/axiosInstance";
 type BookQuery = {
     category?: string;
-    searchKey?: string;
+    q?: string;
 };
 export const getBooks = async (query?: BookQuery): Promise<Book[]> => {
     try {
@@ -11,7 +11,7 @@ export const getBooks = async (query?: BookQuery): Promise<Book[]> => {
             return response.data;
         }
         const response = await axiosInstance.get(
-            `/books?searchKey=${query?.searchKey}&category=${query?.category}`
+            `/books?q=${query?.q}&category=${query?.category}`
         );
         return response.data;
     } catch (error) {
