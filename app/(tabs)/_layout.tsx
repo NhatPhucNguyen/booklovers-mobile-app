@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/Colors";
+import ModalContextProvider from "@/context/ModalContext";
 import useAuthContext from "@/hooks/useAuthContext";
 import { AntDesign } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
@@ -14,92 +15,94 @@ const TabsLayout = () => {
         return <Redirect href="/home" />;
     }
     return (
-        <QueryClientProvider client={client}>
-            <StatusBar style="dark" />
-            <Tabs
-                screenOptions={{
-                    tabBarShowLabel: false,
-                    headerShown: false,
-                    tabBarActiveTintColor: Colors.light.primary,
-                }}
-            >
-                <Tabs.Screen
-                    name="home"
-                    options={{
-                        tabBarIcon: ({ color }) => {
-                            return (
-                                <TabBarIcon
-                                    icon={
-                                        <AntDesign
-                                            name="home"
-                                            size={24}
-                                            color={color}
-                                        />
-                                    }
-                                    title="Home"
-                                    color={color}
-                                />
-                            );
-                        },
+        <ModalContextProvider>
+            <QueryClientProvider client={client}>
+                <StatusBar style="dark" />
+                <Tabs
+                    screenOptions={{
+                        tabBarShowLabel: false,
+                        headerShown: false,
+                        tabBarActiveTintColor: Colors.light.primary,
                     }}
-                />
-                <Tabs.Screen name="myPosts" />
-                <Tabs.Screen
-                    name="discover"
-                    options={{
-                        tabBarIcon: ({ color }) => {
-                            return (
-                                <TabBarIcon
-                                    icon={
-                                        <AntDesign
-                                            name="search1"
-                                            size={24}
-                                            color={color}
-                                        />
-                                    }
-                                    title="Discover"
-                                    color={color}
-                                />
-                            );
-                        },
-                    }}
-                />
-                <Tabs.Screen name="notifications" />
-                <Tabs.Screen
-                    name="profile"
-                    options={{
-                        tabBarIcon: ({ color }) => {
-                            return (
-                                <TabBarIcon
-                                    icon={
-                                        <AntDesign
-                                            name="user"
-                                            size={24}
-                                            color={color}
-                                        />
-                                    }
-                                    title="Profile"
-                                    color={color}
-                                />
-                            );
-                        },
-                    }}
-                />
-                <Tabs.Screen
-                    name="(chat)"
-                    options={{
-                        href: null,
-                    }}
-                />
-                <Tabs.Screen
-                    name="(user)"
-                    options={{
-                        href: null,
-                    }}
-                />
-            </Tabs>
-            <Toast />
-        </QueryClientProvider>
+                >
+                    <Tabs.Screen
+                        name="home"
+                        options={{
+                            tabBarIcon: ({ color }) => {
+                                return (
+                                    <TabBarIcon
+                                        icon={
+                                            <AntDesign
+                                                name="home"
+                                                size={24}
+                                                color={color}
+                                            />
+                                        }
+                                        title="Home"
+                                        color={color}
+                                    />
+                                );
+                            },
+                        }}
+                    />
+                    <Tabs.Screen name="myPosts" />
+                    <Tabs.Screen
+                        name="discover"
+                        options={{
+                            tabBarIcon: ({ color }) => {
+                                return (
+                                    <TabBarIcon
+                                        icon={
+                                            <AntDesign
+                                                name="search1"
+                                                size={24}
+                                                color={color}
+                                            />
+                                        }
+                                        title="Discover"
+                                        color={color}
+                                    />
+                                );
+                            },
+                        }}
+                    />
+                    <Tabs.Screen name="notifications" />
+                    <Tabs.Screen
+                        name="profile"
+                        options={{
+                            tabBarIcon: ({ color }) => {
+                                return (
+                                    <TabBarIcon
+                                        icon={
+                                            <AntDesign
+                                                name="user"
+                                                size={24}
+                                                color={color}
+                                            />
+                                        }
+                                        title="Profile"
+                                        color={color}
+                                    />
+                                );
+                            },
+                        }}
+                    />
+                    <Tabs.Screen
+                        name="(chat)"
+                        options={{
+                            href: null,
+                        }}
+                    />
+                    <Tabs.Screen
+                        name="(user)"
+                        options={{
+                            href: null,
+                        }}
+                    />
+                </Tabs>
+                <Toast />
+            </QueryClientProvider>
+        </ModalContextProvider>
     );
 };
 type TabBarIconProps = {

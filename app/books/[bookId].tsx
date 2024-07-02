@@ -234,6 +234,7 @@ function ReadonlyRating({ rating }: { rating: number }) {
             style={{ marginTop: 5, padding: 5 }}
             showRating
             showReadOnlyText={false}
+            fractions={1}
         />
     );
 }

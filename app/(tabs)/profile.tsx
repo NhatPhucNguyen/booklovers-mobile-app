@@ -2,7 +2,9 @@ import { logout } from "@/apis/auth";
 import { User, getCurrentUser } from "@/apis/user";
 import AvatarImage from "@/components/AvatarImage";
 import LoadingScreen from "@/components/LoadingScreen";
+import CommunityForm from "@/components/forms/CommunityForm";
 import { Colors } from "@/constants/Colors";
+import ModalContextProvider, { useModalContext } from "@/context/ModalContext";
 import useAuthContext from "@/hooks/useAuthContext";
 import { router } from "expo-router";
 import React from "react";
@@ -15,6 +17,7 @@ const Profile = () => {
         queryFn: getCurrentUser,
         queryKey: "currentUser",
     });
+    const { openModal } = useModalContext();
     if (isLoading) {
         return <LoadingScreen />;
     }
@@ -36,7 +39,7 @@ const Profile = () => {
                 </Pressable>
             </View>
             <View style={styles.section}>
-                <Option title="Create Community" />
+                <Option title="Create Community" onPress={openModal} />
                 <Option title="My Connections" />
             </View>
             <View style={[styles.section, { borderBottomWidth: 0 }]}>
@@ -52,6 +55,9 @@ const Profile = () => {
                     }}
                 />
             </View>
+            <ModalContextProvider.Modal title="Create Community">
+                <CommunityForm />
+            </ModalContextProvider.Modal>
         </SafeAreaView>
     );
 };

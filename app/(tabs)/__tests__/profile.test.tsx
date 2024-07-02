@@ -2,7 +2,8 @@ import { render } from "@testing-library/react-native";
 import Profile from "../profile";
 import AuthContextProvider from "@/context/AuthContext";
 import { QueryClient, QueryClientProvider } from "react-query";
-import * as ReactQuery from 'react-query';
+import * as ReactQuery from "react-query";
+import ModalContextProvider from "@/context/ModalContext";
 describe("Profile", () => {
     const client = new QueryClient();
     it("should render key elements", () => {
@@ -15,9 +16,11 @@ describe("Profile", () => {
         );
         const { getByText, getByLabelText } = render(
             <QueryClientProvider client={client}>
-                <AuthContextProvider>
-                    <Profile />
-                </AuthContextProvider>
+                <ModalContextProvider>
+                    <AuthContextProvider>
+                        <Profile />
+                    </AuthContextProvider>
+                </ModalContextProvider>
             </QueryClientProvider>
         );
         expect(getByLabelText("image")).toBeDefined();

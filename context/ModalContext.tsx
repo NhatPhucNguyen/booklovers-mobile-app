@@ -1,9 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import { createContext, useCallback, useContext, useState } from "react";
-import { Pressable, Modal as ReactModal } from "react-native";
-import {
-    SafeAreaView
-} from "react-native-safe-area-context";
+import { Pressable, Modal as ReactModal, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 type ModalContextValue = {
     visible: boolean;
     openModal: () => void;
@@ -36,8 +34,10 @@ export const useModalContext = () => {
 
 ModalContextProvider.Modal = function Modal({
     children,
+    title,
 }: {
     children: React.ReactNode;
+    title?: string;
 }) {
     const { visible, closeModal } = useModalContext();
     return (
@@ -61,6 +61,16 @@ ModalContextProvider.Modal = function Modal({
                 >
                     <AntDesign name="close" size={20} color="black" />
                 </Pressable>
+                {title && <Text
+                    style={{
+                        marginTop: 10,
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        fontSize: 20,
+                    }}
+                >
+                    CommunityForm
+                </Text>}
                 {children}
             </SafeAreaView>
         </ReactModal>
