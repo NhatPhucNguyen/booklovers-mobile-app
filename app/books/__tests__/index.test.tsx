@@ -6,7 +6,7 @@ jest.mock("expo-router", () => ({
     useLocalSearchParams: jest.fn().mockReturnValue({ category: "category" }),
 }));
 jest.mock("@/apis/book", () => ({
-    getBooks: jest.fn().mockResolvedValue(mockBookData),
+    getBooks: jest.fn().mockResolvedValueOnce(mockBookData),
 }));
 const client = new QueryClient();
 describe("Books Tab", () => {

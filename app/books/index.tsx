@@ -19,16 +19,6 @@ import BackHeader from "@/components/BackHeader";
 
 const BooksTab = () => {
     const { category } = useLocalSearchParams<{ category: string }>();
-    // const {
-    //     data: books,
-    //     isLoading,
-    //     isError,
-    // } = useQuery({
-    //     queryFn: () => {
-    //         return category !== "All" ? getBooks({ category }) : getBooks();
-    //     },
-    //     queryKey: [category],
-    // });
     const {
         data,
         isLoading,

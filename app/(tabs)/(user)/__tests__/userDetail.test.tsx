@@ -1,8 +1,10 @@
+import { User } from "@/apis/user";
+import ModalContextProvider from "@/context/ModalContext";
 import { render, waitFor } from "@testing-library/react-native";
-import UserDetail from "../[userId]";
 import * as ReactQuery from "react-query";
 import { QueryClient, QueryClientProvider } from "react-query";
-import ModalContextProvider from "@/context/ModalContext";
+import UserDetail from "../[userId]";
+import axiosMock from "@/__mocks__/axiosMock";
 jest.mock("expo-router", () => ({
     useLocalSearchParams: jest.fn().mockReturnValue({ userId: "test" }),
 }));
@@ -12,6 +14,19 @@ jest.mock("../../../../lib/storage", () => ({
 jest.mock("jwt-decode", () => ({
     jwtDecode: jest.fn().mockReturnValue({ id: "test" }),
 }));
+jest.mock("expo-router", () => ({
+    useLocalSearchParams: jest.fn().mockReturnValue({ userId: "test" }),
+}));
+jest.mock("../../../../apis/user", () => {
+    return {
+        getUserById: jest
+            .fn()
+            .mockResolvedValueOnce({ id: "test", name: "test" } as User),
+    };
+});
+jest.mock("../../../../apis/group", () => ({
+    getGroups: jest.fn().mockResolvedValue([]),
+}));
 describe("UserDetail", () => {
     const client = new QueryClient({
         defaultOptions: {
@@ -20,13 +35,6 @@ describe("UserDetail", () => {
             },
         },
     });
-    jest.spyOn(ReactQuery, "useQuery").mockImplementation(
-        jest.fn().mockReturnValue({
-            data: { id: "test", name: "test" },
-            isLoading: false,
-            isError: false,
-        })
-    );
     it("should render key elements", async () => {
         const { getByLabelText, getByText } = render(
             <QueryClientProvider client={client}>
@@ -44,13 +52,6 @@ describe("UserDetail", () => {
         });
     });
     it("should render the user detail", async () => {
-        jest.spyOn(ReactQuery, "useQuery").mockImplementation(
-            jest.fn().mockReturnValue({
-                data: { id: "test", name: "test" },
-                isLoading: false,
-                isError: false,
-            })
-        );
         const { getByText } = render(
             <QueryClientProvider client={client}>
                 <ModalContextProvider>
@@ -63,11 +64,6 @@ describe("UserDetail", () => {
         });
     });
     it("should render the user not found", async () => {
-        jest.spyOn(ReactQuery, "useQuery").mockImplementation(
-            jest.fn().mockReturnValue({
-                isError: true,
-            })
-        );
         const { getByText } = render(
             <QueryClientProvider client={client}>
                 <ModalContextProvider>

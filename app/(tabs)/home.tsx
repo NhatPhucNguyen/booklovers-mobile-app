@@ -1,4 +1,5 @@
 import { getBooks } from "@/apis/book";
+import { getGroups } from "@/apis/group";
 import BookItem from "@/components/BookItem";
 import BriefPostCard from "@/components/BriefPostCard";
 import { Colors } from "@/constants/Colors";
@@ -11,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { router } from "expo-router";
 import React from "react";
 import {
+    ActivityIndicator,
     Image,
     Pressable,
     ScrollView,
@@ -24,6 +26,10 @@ const Home = () => {
     const { data: books } = useQuery({
         queryFn: () => getBooks(),
         queryKey: ["books"],
+    });
+    const { data: joinedGroups, isLoading } = useQuery({
+        queryFn: () => getGroups({ join: true }),
+        queryKey: ["groups", "joinedGroups"],
     });
     return (
         <SafeAreaView style={styles.container}>
@@ -56,12 +62,13 @@ const Home = () => {
                         horizontal={true}
                         accessibilityLabel="group-container"
                     >
-                        <GroupItem />
-                        <GroupItem />
-                        <GroupItem />
-                        <GroupItem />
-                        <GroupItem />
-                        <GroupItem />
+                        {isLoading && <ActivityIndicator />}
+                        {joinedGroups &&
+                            joinedGroups.map((group, index) => {
+                                return (
+                                    <GroupItem key={index} name={group.name} />
+                                );
+                            })}
                     </ScrollView>
                 </View>
                 <Text style={styles.sectionHeader}>New books</Text>
@@ -103,14 +110,15 @@ const Home = () => {
         </SafeAreaView>
     );
 };
-function GroupItem() {
+function GroupItem({ name }: { name: string }) {
+    const shortenName = name.length > 10 ? name.slice(0, 10) + "..." : name;
     return (
         <View style={styles.groupItem}>
             <Image
                 source={require("../../assets/images/main-logo.png")}
                 style={styles.groupImage}
             />
-            <Text style={{ textAlign: "center" }}>Group Name</Text>
+            <Text style={{ textAlign: "center" }}>{shortenName}</Text>
         </View>
     );
 }

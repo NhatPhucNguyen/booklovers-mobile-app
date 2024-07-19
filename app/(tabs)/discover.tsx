@@ -1,4 +1,5 @@
 import BooksView from "@/components/discover/BooksView";
+import GroupsView from "@/components/discover/GroupsView";
 import { Colors } from "@/constants/Colors";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
@@ -7,9 +8,9 @@ import {
     Text,
     TextInput,
     View,
-    useWindowDimensions,
+    useWindowDimensions
 } from "react-native";
-import { SafeAreaView, useSafeAreaFrame } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 const renderTabBar = (props: any) => (
     <TabBar
@@ -31,7 +32,11 @@ const Discover = () => {
     ]);
     return (
         <SafeAreaView
-            style={{ flex: 1, backgroundColor: Colors.light.background,width:"100%" }}
+            style={{
+                flex: 1,
+                backgroundColor: Colors.light.background,
+                width: "100%",
+            }}
         >
             <View style={styles.searchBar}>
                 <AntDesign name="search1" size={24} color="black" />
@@ -39,7 +44,7 @@ const Discover = () => {
                     placeholder="Search"
                     placeholderTextColor={Colors.light.placeHolder}
                     accessibilityLabel="search"
-                    style={{ width: "90%",marginHorizontal:"auto"}}
+                    style={{ width: "90%", marginHorizontal: "auto" }}
                 />
             </View>
             <TabView
@@ -47,7 +52,7 @@ const Discover = () => {
                 renderScene={SceneMap({
                     first: BooksView,
                     second: Connections,
-                    third: Groups,
+                    third: GroupsView,
                 })}
                 onIndexChange={setIndex}
                 initialLayout={{ width: layout.width }}
@@ -62,13 +67,6 @@ function Connections() {
     return (
         <View>
             <Text>Connections</Text>
-        </View>
-    );
-}
-function Groups() {
-    return (
-        <View>
-            <Text>Groups</Text>
         </View>
     );
 }

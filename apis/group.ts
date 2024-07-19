@@ -1,3 +1,4 @@
+import { Group } from "@/interfaces/Group";
 import axiosInstance from "@/lib/axiosInstance";
 
 type CreateGroupInput = {
@@ -7,6 +8,13 @@ type CreateGroupInput = {
 type EditGroupInput = {
     groupId: string;
 } & CreateGroupInput;
+type GroupParams = {
+    q?: string;
+    join?: boolean;
+    userId?: string;
+    startIndex?: number;
+    maxResults?: number;
+};
 export const createGroup = async (input: CreateGroupInput) => {
     try {
         const response = await axiosInstance.post<{ groupId: string }>(
@@ -44,5 +52,25 @@ export const joinGroup = async (groupId: string) => {
     } catch (error) {
         console.log(error);
         throw new Error("Fail to join group");
+    }
+};
+export const getGroups = async (params: GroupParams): Promise<Group[]> => {
+    try {
+        const response = await axiosInstance.get("/groups", {
+            params: params,
+        });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        throw new Error("Fail to get groups");
+    }
+};
+export const getGroupById = async (groupId: string): Promise<Group> => {
+    try {
+        const response = await axiosInstance.get(`/groups/${groupId}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        throw new Error("Fail to get group");
     }
 };
