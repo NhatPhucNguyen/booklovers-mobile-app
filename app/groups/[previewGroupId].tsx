@@ -1,14 +1,16 @@
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import React from "react";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useQuery } from "react-query";
-import { getGroupById } from "@/apis/group";
+import { useMutation, useQuery } from "react-query";
+import { getGroupById, joinGroup } from "@/apis/group";
 import LoadingScreen from "@/components/LoadingScreen";
 import BackHeader from "@/components/BackHeader";
 import { Colors } from "@/constants/Colors";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import Button from "@/components/Button";
+import AvatarImage from "@/components/AvatarImage";
+import Toast from "react-native-toast-message";
 
 const PreviewGroup = () => {
     const { previewGroupId } = useLocalSearchParams<{
@@ -22,6 +24,25 @@ const PreviewGroup = () => {
         queryFn: () => getGroupById(previewGroupId!),
         queryKey: ["group", previewGroupId],
     });
+    const { mutateAsync: joinGroupMutate, isLoading: isLoadingGroupJoin } =
+        useMutation({
+            mutationFn: joinGroup,
+            mutationKey: ["joinGroup"],
+            onError: (error: Error) => {
+                Toast.show({
+                    text1: error.message,
+                    type: "error",
+                });
+            },
+            onSuccess: () => {
+                router.push({
+                    pathname: "/",
+                    params: {
+                        groupId: previewGroupId,
+                    },
+                });
+            },
+        });
     if (isLoading) {
         return <LoadingScreen />;
     }
@@ -82,9 +103,32 @@ const PreviewGroup = () => {
                     <Text style={styles.sectionHeader}>About</Text>
                     <Text style={styles.description}>{group.description}</Text>
                     <Text style={styles.sectionHeader}>Create By</Text>
+                    <View style={styles.creatorCard}>
+                        <AvatarImage avatarName={group.creator.avatar} border />
+                        <View>
+                            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                                {group.creator?.name}
+                            </Text>
+                            <Text>
+                                {new Date(group.createdAt).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                        month: "long",
+                                        year: "numeric",
+                                    }
+                                )}
+                            </Text>
+                        </View>
+                    </View>
                 </View>
             </ScrollView>
-            <Button title="Join" onPress={() => {}} style={styles.joinButton} />
+            <Button
+                title={isLoadingGroupJoin ? "Joining..." : "Join"}
+                onPress={async () => {
+                    await joinGroupMutate(previewGroupId!);
+                }}
+                style={styles.joinButton}
+            />
         </SafeAreaView>
     );
 };
@@ -154,6 +198,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 10,
         marginHorizontal: 10,
+    },
+    creatorCard: {
+        display: "flex",
+        flexDirection: "row",
+        marginTop: 10,
+        gap: 10,
+        alignContent: "center",
     },
 });
 export default PreviewGroup;

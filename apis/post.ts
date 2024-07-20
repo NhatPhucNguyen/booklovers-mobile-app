@@ -1,3 +1,4 @@
+import { Discussion } from "@/interfaces/Group";
 import axiosInstance from "@/lib/axiosInstance";
 export enum PostType {
     Review = "review",
@@ -53,5 +54,16 @@ export const likePost = async (postId: string): Promise<boolean> => {
     } catch (error) {
         console.log(error);
         throw new Error("Fail to like post");
+    }
+};
+export const getDiscussionsByGroupId = async (
+    groupId: string
+): Promise<Discussion[]> => {
+    try {
+        const response = await axiosInstance.get(`/posts/group/${groupId}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        throw new Error("Fail to get posts");
     }
 };

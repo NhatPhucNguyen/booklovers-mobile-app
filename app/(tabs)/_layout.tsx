@@ -99,6 +99,12 @@ const TabsLayout = () => {
                             href: null,
                         }}
                     />
+                    <Tabs.Screen
+                        name="(group)"
+                        options={{
+                            href: null,
+                        }}
+                    />
                 </Tabs>
                 <Toast />
             </QueryClientProvider>

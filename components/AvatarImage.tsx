@@ -1,6 +1,7 @@
 import Avatars from "@/constants/Avatars";
+import { Colors } from "@/constants/Colors";
 import React from "react";
-import { Image } from "react-native";
+import { ColorValue, Image } from "react-native";
 type AvatarImageProps = {
     size?: "small" | "medium" | "large";
     sizeNumber?: number;
@@ -8,6 +9,8 @@ type AvatarImageProps = {
     accessibilityLabel?: string;
     center?: boolean;
     noRadius?: boolean;
+    border?: boolean;
+    borderColor?: ColorValue;
 };
 const SIZE = {
     small: 50,
@@ -21,6 +24,8 @@ const AvatarImage = ({
     accessibilityLabel,
     center,
     noRadius,
+    border,
+    borderColor,
 }: AvatarImageProps) => {
     return (
         <Image
@@ -34,6 +39,8 @@ const AvatarImage = ({
                 width: sizeNumber || SIZE[size || "small"],
                 height: sizeNumber || SIZE[size || "small"],
                 margin: center ? "auto" : 0,
+                borderWidth: border ? 2 : 0,
+                borderColor: borderColor || Colors.light.primary,
             }}
             accessibilityLabel={accessibilityLabel || "image"}
         />

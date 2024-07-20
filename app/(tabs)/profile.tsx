@@ -30,7 +30,7 @@ const Profile = () => {
                     style={styles.button}
                     onPress={() => {
                         router.push({
-                            pathname: "/[userId]",
+                            pathname: "/(user)/[userId]",
                             params: { userId: user?.id },
                         });
                     }}

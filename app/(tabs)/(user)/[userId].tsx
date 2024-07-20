@@ -7,7 +7,7 @@ import { Colors } from "@/constants/Colors";
 import ModalContextProvider, { useModalContext } from "@/context/ModalContext";
 import { getData } from "@/lib/storage";
 import { AntDesign, Entypo, EvilIcons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { jwtDecode } from "jwt-decode";
 import React, { useEffect } from "react";
@@ -129,9 +129,21 @@ const UserDetail = () => {
                     {isLoadingGroups && <ActivityIndicator />}
                     {joinedGroups ? (
                         <>
-                            {joinedGroups.map((group, index) => {
+                            {joinedGroups.map((group) => {
                                 return (
-                                    <GroupCard key={index} name={group.name} />
+                                    <Pressable
+                                        key={group.id}
+                                        onPress={() => {
+                                            router.push({
+                                                pathname: "/(group)/[groupId]",
+                                                params: {
+                                                    groupId: group.id,
+                                                },
+                                            });
+                                        }}
+                                    >
+                                        <GroupCard name={group.name} />
+                                    </Pressable>
                                 );
                             })}
                         </>
