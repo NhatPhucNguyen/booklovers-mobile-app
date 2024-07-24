@@ -3,7 +3,7 @@ import AuthContextProvider from "@/context/AuthContext";
 import { render, userEvent } from "@testing-library/react-native";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import BriefPostCard from "../BriefPostCard";
+import PostCard from "../PostCard";
 const post = {
     id: "123",
     author: {
@@ -28,27 +28,25 @@ const createWrapper = () => {
 jest.mock("@/apis/post", () => ({
     likePost: jest.fn().mockResolvedValueOnce(true),
 }));
-describe("BriefPostCard", () => {
+describe("PostCard", () => {
     const user = userEvent.setup({
         delay: 500,
     });
     it("renders group post correctly", () => {
         const { getByLabelText } = render(
-            <BriefPostCard postType="group" groupName="test" post={post} />,
+            <PostCard postType="group" groupName="test" post={post} />,
             {
                 wrapper: createWrapper(),
             }
         );
 
         const postType = getByLabelText("post-name");
-        const cardBody = getByLabelText("card-body");
         const cardFooter = getByLabelText("card-footer");
         const joinButton = getByLabelText("join-button");
         const likeButton = getByLabelText("like-button");
         const commentButton = getByLabelText("comment-button");
 
         expect(postType).toBeDefined();
-        expect(cardBody).toBeDefined();
         expect(cardFooter).toBeDefined();
         expect(joinButton).toBeDefined();
         expect(likeButton).toBeDefined();
@@ -56,7 +54,7 @@ describe("BriefPostCard", () => {
     });
     it("render joined group post correctly", () => {
         const { queryByLabelText } = render(
-            <BriefPostCard
+            <PostCard
                 postType="group"
                 groupName="test"
                 isJoined
@@ -71,7 +69,7 @@ describe("BriefPostCard", () => {
     it("renders review post correctly", () => {
         const review = mockBookData[0].reviews[0];
         const { queryByLabelText } = render(
-            <BriefPostCard
+            <PostCard
                 postType="review"
                 post={{ ...review, updatedAt: new Date() }}
             />,
@@ -83,7 +81,7 @@ describe("BriefPostCard", () => {
     });
     it("toggles like button", async () => {
         const { getByLabelText, queryByTestId } = render(
-            <BriefPostCard postType="group" groupName="test" post={post} />,
+            <PostCard postType="group" groupName="test" post={post} />,
             {
                 wrapper: createWrapper(),
             }

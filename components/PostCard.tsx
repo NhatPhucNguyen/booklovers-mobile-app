@@ -3,6 +3,7 @@ import Avatars from "@/constants/Avatars";
 import { Colors } from "@/constants/Colors";
 import useAuthContext from "@/hooks/useAuthContext";
 import { Review } from "@/interfaces/Book";
+import { Discussion } from "@/interfaces/Group";
 import { calculateTimeDiff } from "@/utils/calculateTimeDiff";
 import { AntDesign } from "@expo/vector-icons";
 import { faComments, faHeart } from "@fortawesome/free-regular-svg-icons";
@@ -16,22 +17,24 @@ type GroupPostType = {
     postType: "group";
     groupName: string;
     isJoined?: boolean;
+    post: Discussion;
 };
 type ReviewPostType = {
     postType: "review";
     hideTitle?: boolean;
     title?: string;
-};
-type BriefPostCardProps = (GroupPostType | ReviewPostType) & {
     post: Review;
+};
+type PostCardProps = (GroupPostType | ReviewPostType) & {
     modified?: boolean;
     actions?: {
         onEdit?: () => void;
         onDelete?: () => void;
     };
+    onFeed?: boolean;
 };
 const ICON_SIZE = 18;
-const BriefPostCard = (props: BriefPostCardProps) => {
+const PostCard = (props: PostCardProps) => {
     const client = useQueryClient();
     const { user } = useAuthContext();
     const { mutateAsync: likePostMutate } = useMutation({
@@ -42,9 +45,7 @@ const BriefPostCard = (props: BriefPostCardProps) => {
         },
     });
     const [isPressLike, setPressLike] = React.useState(
-        props.post.likes?.find((item) => item.id === user?.id)
-            ? true
-            : false
+        props.post.likes?.find((item) => item.id === user?.id) ? true : false
     );
     const [count, setCount] = React.useState(props.post._count.likes || 0);
     const handlePressLike = async () => {
@@ -61,21 +62,16 @@ const BriefPostCard = (props: BriefPostCardProps) => {
                             style={styles.postType}
                             accessibilityLabel="post-name"
                         >
-                            {props.postType == "group" ? (
-                                <Text style={{ color: Colors.light.brown }}>
-                                    {props.groupName}
-                                </Text>
-                            ) : (
-                                <View>
-                                    <Rating
-                                        type="star"
-                                        imageSize={18}
-                                        startingValue={props.post.rating || 0}
-                                        readonly
-                                        tintColor={Colors.light.secondary}
-                                    />
-                                </View>
-                            )}
+                            <HeaderInfo
+                                avatar={props.post.author.avatar}
+                                authorName={props.post.author.name}
+                                updatedAt={props.post.updatedAt}
+                                rating={
+                                    props.postType == "review"
+                                        ? props.post.rating
+                                        : undefined
+                                }
+                            />
                             {props.modified && (
                                 <View style={styles.action}>
                                     <Pressable onPress={props.actions?.onEdit}>
@@ -109,24 +105,7 @@ const BriefPostCard = (props: BriefPostCardProps) => {
                     )}
                 </View>
             </View>
-            <View style={styles.section} accessibilityLabel="card-body">
-                <View style={styles.creatorContainer}>
-                    <Image
-                        source={Avatars[props.post.author.avatar || "default"]}
-                        style={styles.image}
-                    />
-                    <Text style={styles.name}>{props.post.author.name}</Text>
-                    <Text style={{ fontWeight: "300" }}>
-                        {calculateTimeDiff(props.post.updatedAt)}
-                    </Text>
-                </View>
-                {props.postType === "review" && !props.hideTitle && (
-                    <Text style={styles.title}>{props.title}</Text>
-                )}
-            </View>
-            <Text style={styles.content}>
-                {props.post.content || "No content"}
-            </Text>
+            <Text>{props.post.content || "No content"}</Text>
             <View
                 style={styles.interactionContainer}
                 accessibilityLabel="card-footer"
@@ -163,9 +142,60 @@ const BriefPostCard = (props: BriefPostCardProps) => {
         </View>
     );
 };
+type HeaderInfoProps = (
+    | { onFeed: true; title: string }
+    | { onFeed?: false }
+) & { authorName: string; avatar?: string; updatedAt: Date; rating?: number };
+function HeaderInfo(props: HeaderInfoProps) {
+    return (
+        <View style={styles.headerInfoContainer}>
+            <Image
+                source={Avatars[props.avatar || "default"]}
+                style={styles.image}
+            />
+            <View>
+                {props.onFeed ? (
+                    <>
+                        <Text style={styles.cardTitle}>{props.title}</Text>
+                        <Text style={{ fontWeight: "500", fontSize: 12 }}>
+                            {props.authorName}
+                            {" - "}
+                            <Text style={{ fontWeight: "300" }}>
+                                {calculateTimeDiff(props.updatedAt)}
+                            </Text>
+                        </Text>
+                    </>
+                ) : (
+                    <View
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <Text style={{ fontWeight: "600", fontSize: 14 }}>
+                            {props.authorName}
+                            {" - "}
+                            <Text style={{ fontWeight: "300" }}>
+                                {calculateTimeDiff(props.updatedAt)}
+                            </Text>
+                        </Text>
+                        {props.rating && (
+                            <Rating
+                                startingValue={props.rating}
+                                readonly
+                                imageSize={12}
+                            />
+                        )}
+                    </View>
+                )}
+            </View>
+        </View>
+    );
+}
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.light.secondary,
+        backgroundColor: Colors.light.background,
         elevation: 3,
         borderRadius: 10,
         padding: 10,
@@ -195,7 +225,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
     },
-    content: {},
+    cardTitle: {
+        fontSize: 16,
+        fontWeight: "bold",
+    },
     section: {
         width: "100%",
         borderBottomWidth: 2,
@@ -212,6 +245,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         zIndex: 5,
     },
+    headerInfoContainer: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 5,
+    },
     joinButton: {
         backgroundColor: Colors.light.primary,
         width: 50,
@@ -223,20 +262,11 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     image: {
-        width: 20,
-        height: 20,
-        borderRadius: 50,
-    },
-    creatorContainer: {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 10,
-        marginBottom: 5,
-    },
-    name: {
-        fontWeight: "bold",
-        color: Colors.light.primary,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: Colors.light.primary,
     },
     interactionContainer: {
         display: "flex",
@@ -254,4 +284,4 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 });
-export default BriefPostCard;
+export default PostCard;

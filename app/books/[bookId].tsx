@@ -1,7 +1,7 @@
 import { getBookById } from "@/apis/book";
 import { deletePost } from "@/apis/post";
 import BackHeader from "@/components/BackHeader";
-import BriefPostCard from "@/components/BriefPostCard";
+import PostCard from "@/components/PostCard";
 import Button from "@/components/Button";
 import LoadingScreen from "@/components/LoadingScreen";
 import ReviewForm, { ReviewToEdit } from "@/components/forms/ReviewForm";
@@ -166,7 +166,7 @@ const BookDetails = () => {
                                 )}
                                 <View style={{ marginTop: 5 }}>
                                     {book.reviews?.map((review) => (
-                                        <BriefPostCard
+                                        <PostCard
                                             key={review.id}
                                             postType="review"
                                             post={review}

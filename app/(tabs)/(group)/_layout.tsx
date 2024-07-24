@@ -1,9 +1,13 @@
-import { View, Text } from "react-native";
-import React from "react";
+import ModalContextProvider from "@/context/ModalContext";
 import { Slot } from "expo-router";
+import React from "react";
 
 const GroupLayout = () => {
-    return <Slot />;
+    return (
+        <ModalContextProvider>
+            <Slot />
+        </ModalContextProvider>
+    );
 };
 
 export default GroupLayout;

@@ -152,7 +152,6 @@ const UserDetail = () => {
                     )}
                 </View>
                 <Text style={styles.sectionHeader}>Activities</Text>
-                {/* <BriefPostCard postType="review" bookTitle="Book Title" /> */}
                 <Text style={styles.sectionHeader}>Connections</Text>
             </ScrollView>
             <ModalContextProvider.Modal>

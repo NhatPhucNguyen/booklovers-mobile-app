@@ -20,7 +20,7 @@ export interface Discussion {
     id: string;
     content: string;
     author: User;
-    updatedAt: string;
+    updatedAt: Date;
     _count: {
         likes: number;
     };

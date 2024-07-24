@@ -69,7 +69,7 @@ ModalContextProvider.Modal = function Modal({
                         fontSize: 20,
                     }}
                 >
-                    CommunityForm
+                    {title}
                 </Text>}
                 {children}
             </SafeAreaView>

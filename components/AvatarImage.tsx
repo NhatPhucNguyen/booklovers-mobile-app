@@ -35,7 +35,7 @@ const AvatarImage = ({
                     : Avatars.default
             }
             style={{
-                borderRadius: noRadius ? 0 : sizeNumber ? sizeNumber / 2 : 100,
+                borderRadius: noRadius ? 0 : sizeNumber ? sizeNumber / 2 : 50,
                 width: sizeNumber || SIZE[size || "small"],
                 height: sizeNumber || SIZE[size || "small"],
                 margin: center ? "auto" : 0,

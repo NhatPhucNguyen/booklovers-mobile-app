@@ -1,7 +1,6 @@
 import { getBooks } from "@/apis/book";
 import { getGroups } from "@/apis/group";
 import BookItem from "@/components/BookItem";
-import BriefPostCard from "@/components/BriefPostCard";
 import { Colors } from "@/constants/Colors";
 import { Book } from "@/interfaces/Book";
 import {
