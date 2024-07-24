@@ -171,9 +171,6 @@ const BookDetails = () => {
                                             postType="review"
                                             post={review}
                                             hideTitle
-                                            modified={
-                                                review.author.id === user?.id
-                                            }
                                             actions={{
                                                 onDelete: async () => {
                                                     await deletePostMutate(

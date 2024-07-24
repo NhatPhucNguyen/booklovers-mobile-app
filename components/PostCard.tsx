@@ -15,7 +15,7 @@ import { Rating } from "react-native-ratings";
 import { useMutation, useQueryClient } from "react-query";
 type GroupPostType = {
     postType: "group";
-    groupName: string;
+    groupName?: string;
     isJoined?: boolean;
     post: Discussion;
 };
@@ -26,7 +26,6 @@ type ReviewPostType = {
     post: Review;
 };
 type PostCardProps = (GroupPostType | ReviewPostType) & {
-    modified?: boolean;
     actions?: {
         onEdit?: () => void;
         onDelete?: () => void;
@@ -72,7 +71,7 @@ const PostCard = (props: PostCardProps) => {
                                         : undefined
                                 }
                             />
-                            {props.modified && (
+                            {props.post.author.id == user?.id && (
                                 <View style={styles.action}>
                                     <Pressable onPress={props.actions?.onEdit}>
                                         <AntDesign

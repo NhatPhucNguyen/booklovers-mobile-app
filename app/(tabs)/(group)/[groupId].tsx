@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/apis/user";
 import AvatarImage from "@/components/AvatarImage";
 import BackHeader from "@/components/BackHeader";
 import LoadingScreen from "@/components/LoadingScreen";
+import PostCard from "@/components/PostCard";
 import ModalContextProvider, { useModalContext } from "@/context/ModalContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
@@ -65,7 +66,7 @@ const GroupDiscussionView = () => {
         <SafeAreaView>
             <FlatList
                 ListHeaderComponent={
-                    <>
+                    <View style={{ marginBottom: 10 }}>
                         <Image
                             source={require("../../../assets/images/main-background.png")}
                             style={styles.groupBackground}
@@ -96,11 +97,20 @@ const GroupDiscussionView = () => {
                                 <Text>Have something to share ...</Text>
                             </Pressable>
                         </View>
-                    </>
+                    </View>
                 }
                 data={posts?.pages.flat()}
                 renderItem={({ item }) => {
-                    return <></>;
+                    return (
+                        <View style={{ padding: 5 }}>
+                            <PostCard
+                                postType="group"
+                                key={item.id}
+                                post={item}
+                                isJoined
+                            />
+                        </View>
+                    );
                 }}
                 ListEmptyComponent={
                     <Text
@@ -113,7 +123,7 @@ const GroupDiscussionView = () => {
                     </Text>
                 }
                 numColumns={1}
-                style={{minHeight: "100%" }}
+                style={{ minHeight: "100%" }}
             />
             <ModalContextProvider.Modal title="Create Discussion">
                 <Text>Discussion Form</Text>
